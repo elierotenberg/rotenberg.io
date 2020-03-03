@@ -1,0 +1,9 @@
+{
+  "autorun": false,
+  "terminals": [
+    {
+      "name": "rotenberg.io",
+      "cwd": "[workspaceFolder]"
+    }
+  ]
+}

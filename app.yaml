@@ -1,0 +1,8 @@
+runtime: custom
+env: flex
+skip_files:
+  - node_modules
+  - out
+  - \.next
+manual_scaling:
+  instances: 1
