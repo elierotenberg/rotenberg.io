@@ -4,5 +4,6 @@ skip_files:
   - node_modules
   - out
   - \.next
-manual_scaling:
-  instances: 1
+instance_class: F1
+automatic_scaling:
+  max_num_instances: 1
