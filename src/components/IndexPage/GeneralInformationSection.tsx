@@ -36,7 +36,7 @@ const publicProfiles: IPublicProfile[] = [
   {
     icon: <Twitter />,
     title: "Twitter",
-    href: "'https://twitter.com/elierotenberg",
+    href: "https://twitter.com/elierotenberg",
   },
 ];
 
