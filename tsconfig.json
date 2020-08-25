@@ -35,11 +35,14 @@
   },
   "exclude": [
     "node_modules",
-    "build",
-    "typedoc"
+    "out",
+    ".firebase",
+    ".next",
+    "public"
   ],
   "include": [
-    "src/pages",
-    "src"
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
   ]
 }

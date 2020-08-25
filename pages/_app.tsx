@@ -5,8 +5,8 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { Router } from "next/router";
 
-import { triggerPageView } from "../gtag";
-import { theme } from "../theme";
+import { triggerPageView } from "../lib/gtag";
+import { theme } from "../lib/theme";
 
 Router.events.on("routeChangeComplete", (url) => triggerPageView(url));
 

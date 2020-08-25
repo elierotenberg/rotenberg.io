@@ -96,7 +96,7 @@ const generalInformationItems: IGeneralInformationItem[] = [
   },
 ];
 
-const GeneralInformationSection: FunctionComponent<BoxProps> = (
+export const GeneralInformationSection: FunctionComponent<BoxProps> = (
   props: BoxProps,
 ) => {
   return (
@@ -143,5 +143,3 @@ const GeneralInformationSection: FunctionComponent<BoxProps> = (
     </Box>
   );
 };
-
-export { GeneralInformationSection };

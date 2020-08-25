@@ -30,7 +30,7 @@ const currentPositionItems: ICurrentPositionItem[] = [
   },
 ];
 
-const CurrentPositionsSection: FunctionComponent<BoxProps> = (
+export const CurrentPositionsSection: FunctionComponent<BoxProps> = (
   props: BoxProps,
 ) => {
   return (
@@ -77,5 +77,3 @@ const CurrentPositionsSection: FunctionComponent<BoxProps> = (
     </Box>
   );
 };
-
-export { CurrentPositionsSection };

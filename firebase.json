@@ -3,6 +3,12 @@
     "public": "out",
     "ignore": [
       "firebase.json",
+      ".next",
+      ".vscode",
+      "components",
+      "lib",
+      "pages",
+      "public",
       "**/.*",
       "**/node_modules/**"
     ],
@@ -11,6 +17,7 @@
         "source": "**",
         "destination": "/index.html"
       }
-    ]
+    ],
+    "cleanUrls": true
   }
 }

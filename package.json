@@ -7,6 +7,7 @@
     "build": "next build",
     "export": "next export",
     "start": "next start",
+    "deploy": "next build && next export && firebase deploy",
     "firebase": "firebase"
   },
   "dependencies": {

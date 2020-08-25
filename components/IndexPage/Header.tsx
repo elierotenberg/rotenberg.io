@@ -18,7 +18,7 @@ const useStyles = makeStyles(() =>
   }),
 );
 
-const Header: FunctionComponent<BoxProps> = (props: BoxProps) => {
+export const Header: FunctionComponent<BoxProps> = (props: BoxProps) => {
   const styles = useStyles();
   return (
     <Box mt={2.5} pt={4} mb={1} mx={4} component="header" {...props}>
@@ -44,5 +44,3 @@ const Header: FunctionComponent<BoxProps> = (props: BoxProps) => {
     </Box>
   );
 };
-
-export { Header };

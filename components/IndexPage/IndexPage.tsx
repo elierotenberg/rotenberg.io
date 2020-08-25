@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) =>
   }),
 );
 
-const IndexPage: FunctionComponent = () => {
+export const IndexPage: FunctionComponent = () => {
   const styles = useStyles();
   return (
     <Box my={1}>
@@ -46,5 +46,3 @@ const IndexPage: FunctionComponent = () => {
     </Box>
   );
 };
-
-export { IndexPage };
