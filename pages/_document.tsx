@@ -2,8 +2,8 @@ import React, { ReactElement } from "react";
 import Document, { Head, Main, NextScript, Html } from "next/document";
 import { ServerStyleSheets } from "@material-ui/core/styles";
 
-import { theme } from "../theme";
-import { GA_TRACKING_ID } from "../gtag";
+import { theme } from "../lib/theme";
+import { GA_TRACKING_ID } from "../lib/gtag";
 
 const globalScriptDangerousHtml = `
   window.dataLayer = window.dataLayer || [];

@@ -2,7 +2,7 @@ import React, { FunctionComponent } from "react";
 import Head from "next/head";
 
 import { PageContainer } from "../components/PageContainer";
-import { useCanonicalUrl } from "../url";
+import { useCanonicalUrl } from "../lib/url";
 import { IndexPage } from "../components/IndexPage/IndexPage";
 
 const Index: FunctionComponent = () => {

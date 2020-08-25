@@ -438,7 +438,7 @@ const useStyles = makeStyles((theme) =>
   }),
 );
 
-const TimelineEvent: FunctionComponent<ITimelineEventProps> = ({
+export const TimelineEvent: FunctionComponent<ITimelineEventProps> = ({
   event,
   isLastItem,
 }: ITimelineEventProps) => {
@@ -500,7 +500,9 @@ const TimelineEvent: FunctionComponent<ITimelineEventProps> = ({
   );
 };
 
-const TimelineSection: FunctionComponent<BoxProps> = (props: BoxProps) => {
+export const TimelineSection: FunctionComponent<BoxProps> = (
+  props: BoxProps,
+) => {
   const [activeTags, setActiveTags] = useState<Record<string, boolean>>(
     availableTags.reduce((acc, { tag }) => ({ ...acc, [tag]: true }), {}),
   );
@@ -557,5 +559,3 @@ const TimelineSection: FunctionComponent<BoxProps> = (props: BoxProps) => {
     </Box>
   );
 };
-
-export { TimelineSection };

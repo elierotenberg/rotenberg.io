@@ -51,7 +51,9 @@ const publicationItems: IPublicationItem[] = [
   },
 ].reverse();
 
-const PublicationsSection: FunctionComponent<BoxProps> = (props: BoxProps) => {
+export const PublicationsSection: FunctionComponent<BoxProps> = (
+  props: BoxProps,
+) => {
   return (
     <Box component="section" {...props}>
       <Box>
@@ -100,5 +102,3 @@ const PublicationsSection: FunctionComponent<BoxProps> = (props: BoxProps) => {
     </Box>
   );
 };
-
-export { PublicationsSection };
