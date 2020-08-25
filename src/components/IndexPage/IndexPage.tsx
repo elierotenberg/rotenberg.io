@@ -7,7 +7,7 @@ import { TimelineSection } from "./TimelineSection";
 import { PublicationsSection } from "./PublicationsSection";
 import { Header } from "./Header";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     section: {
       marginTop: theme.spacing(5),

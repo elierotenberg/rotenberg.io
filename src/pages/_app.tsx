@@ -8,7 +8,7 @@ import { Router } from "next/router";
 import { triggerPageView } from "../gtag";
 import { theme } from "../theme";
 
-Router.events.on("routeChangeComplete", url => triggerPageView(url));
+Router.events.on("routeChangeComplete", (url) => triggerPageView(url));
 
 export default class extends App {
   public readonly componentDidMount = (): void => {

@@ -359,7 +359,7 @@ const availableTags: ITag[] = [
   },
 ];
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     verticalLineContainer: {
       position: "relative",
@@ -506,7 +506,7 @@ const TimelineSection: FunctionComponent<BoxProps> = (props: BoxProps) => {
   );
 
   const toggleTag = useCallback((tag: string) => {
-    setActiveTags(prevActiveTags => ({
+    setActiveTags((prevActiveTags) => ({
       ...prevActiveTags,
       [tag]: !prevActiveTags[tag],
     }));
@@ -514,7 +514,9 @@ const TimelineSection: FunctionComponent<BoxProps> = (props: BoxProps) => {
 
   const activeTimelineEvents = useMemo(
     () =>
-      timelineEvents.filter(event => event.tags.some(tag => activeTags[tag])),
+      timelineEvents.filter((event) =>
+        event.tags.some((tag) => activeTags[tag]),
+      ),
     [activeTags],
   );
 

@@ -1,9 +1,0 @@
-runtime: custom
-env: flex
-skip_files:
-  - node_modules
-  - out
-  - \.next
-instance_class: F1
-automatic_scaling:
-  max_num_instances: 1

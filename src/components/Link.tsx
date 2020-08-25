@@ -18,7 +18,7 @@ const InnerNextLink = forwardRef<HTMLAnchorElement, NextLinkProps>(
   },
 );
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       "&:hover": {
