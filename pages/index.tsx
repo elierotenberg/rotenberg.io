@@ -1,9 +1,10 @@
 import React, { FunctionComponent } from "react";
 import Head from "next/head";
 
-import { PageContainer } from "../components/PageContainer";
 import { useCanonicalUrl } from "../lib/url";
-import { IndexPage } from "../components/IndexPage/IndexPage";
+import { Resume } from "../components/Resume/Resume";
+import { NavBar } from "../components/NavBar";
+import { Footer } from "../components/Footer";
 
 const Index: FunctionComponent = () => {
   const link = useCanonicalUrl();
@@ -13,9 +14,9 @@ const Index: FunctionComponent = () => {
         <title>Elie Rotenberg</title>
         {link}
       </Head>
-      <PageContainer>
-        <IndexPage />
-      </PageContainer>
+      <NavBar />
+      <Resume />
+      <Footer />
     </>
   );
 };

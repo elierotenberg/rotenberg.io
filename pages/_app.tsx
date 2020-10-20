@@ -1,39 +1,25 @@
-import React, { ReactElement } from "react";
-import App from "next/app";
-import Head from "next/head";
-import { ThemeProvider } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import { Router } from "next/router";
+import React, { FunctionComponent, useEffect } from "react";
+import { useRouter } from "next/router";
+import { AppProps } from "next/app";
+import { ChakraProvider } from "@chakra-ui/core";
 
-import { triggerPageView } from "../lib/gtag";
+import { triggerPageView } from "../lib/GoogleAnalytics";
 import { theme } from "../lib/theme";
 
-Router.events.on("routeChangeComplete", (url) => triggerPageView(url));
+const App: FunctionComponent<AppProps> = ({ Component, pageProps }) => {
+  const router = useRouter();
+  useEffect(() => {
+    router.events.on("routeChangeComplete", triggerPageView);
+    return () => {
+      router.events.off("routeChangeComplete", triggerPageView);
+    };
+  }, [router.events]);
 
-export default class extends App {
-  public readonly componentDidMount = (): void => {
-    const jssStyles = document.querySelector("#jss-server-side");
-    if (jssStyles && jssStyles.parentElement) {
-      jssStyles.parentElement.removeChild(jssStyles);
-    }
-  };
+  return (
+    <ChakraProvider theme={theme}>
+      <Component {...pageProps} />
+    </ChakraProvider>
+  );
+};
 
-  public readonly render = (): ReactElement => {
-    const { Component, pageProps } = this.props;
-
-    return (
-      <>
-        <Head>
-          <meta
-            name="viewport"
-            content="minimum-scale=1, initial-scale=1, width=device-width"
-          />
-        </Head>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Component {...pageProps} />
-        </ThemeProvider>
-      </>
-    );
-  };
-}
+export default App;

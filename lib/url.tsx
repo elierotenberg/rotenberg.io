@@ -1,21 +1,23 @@
 import { useRouter } from "next/router";
 import React, { useEffect, ReactNode } from "react";
 
-const baseUrl = `https://elie.rotenberg.io`;
+const canonicalBaseUrl = process.env.NEXT_PUBLIC_CANONICAL_BASE_URL;
+const allowBaseUrl = (process.env.NEXT_PUBLIC_ALLOW_BASE_URL ?? "")
+  .split(" ")
+  .filter((baseUrl) => baseUrl.length > 0);
 
 const useCanonicalUrl = (): ReactNode => {
-  const { route } = useRouter();
-  const href = new URL(route, baseUrl).href;
-  useEffect(() => {
-    if (
-      window.location.hostname !== "localhost" &&
-      window.location.href !== href
-    ) {
-      window.location.assign(href);
-    }
-  }, [href]);
+  const { asPath } = useRouter();
 
-  return <link rel="canonical" href={href} />;
+  const canonicalHref = `${canonicalBaseUrl}${asPath}`;
+  const allowHref = allowBaseUrl.map((baseUrl) => `${baseUrl}${asPath}`);
+  useEffect(() => {
+    if (![canonicalHref, ...allowHref].includes(window.location.href)) {
+      window.location.assign(canonicalHref);
+    }
+  }, [canonicalHref, allowHref]);
+
+  return <link rel="canonical" href={canonicalHref} />;
 };
 
 export { useCanonicalUrl };
