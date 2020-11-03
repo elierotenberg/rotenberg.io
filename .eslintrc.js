@@ -62,5 +62,6 @@ module.exports = {
       },
     ],
     "react/prop-types": 0, // until https://github.com/yannickcr/eslint-plugin-react/issues/2654 is resolved
+    "react/display-name": 0,
   },
 };

@@ -1,3 +1,4 @@
+import { Box, Button, Container, Heading } from "@chakra-ui/core";
 import React, {
   FunctionComponent,
   useState,
@@ -5,19 +6,6 @@ import React, {
   useCallback,
   FormEvent,
 } from "react";
-import {
-  TableContainer,
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  Paper,
-  Box,
-  Button,
-  makeStyles,
-} from "@material-ui/core";
-import { Casino } from "@material-ui/icons";
 
 enum Commander {
   Raynor = "Raynor",
@@ -198,19 +186,7 @@ const getDefaultState = (): Sc2CoopPickerState => {
   return parseSerializedState(serializedState) ?? DEFAULT_STATE;
 };
 
-const useStyles = makeStyles({
-  portrait: {
-    width: 32,
-    height: 32,
-    objectFit: "contain",
-  },
-  pointer: {
-    cursor: "pointer",
-  },
-});
-
 export const Sc2CoopPickerPage: FunctionComponent = () => {
-  const styles = useStyles();
   const [state, setState] = useState<Sc2CoopPickerState>(DEFAULT_STATE);
 
   useEffect(() => {
@@ -251,112 +227,98 @@ export const Sc2CoopPickerPage: FunctionComponent = () => {
   );
 
   return (
-    <>
-      <Box m={1}>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell />
-                {VARIANTS.map((variant, key) => (
-                  <TableCell
-                    key={key}
-                    scope="col"
-                    component="th"
-                    className={styles.pointer}
-                    onClick={() =>
-                      setState((state) => toggleAvailable(state, null, variant))
-                    }
-                    align="center"
-                  >
-                    {variant}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {COMMANDERS.map((commander, key) => (
-                <TableRow key={key}>
-                  <TableCell
-                    component="th"
-                    scope="row"
-                    className={styles.pointer}
-                    onClick={() =>
+    <Container p={4} maxWidth="80ch">
+      <Heading as="h1" mb={6} textAlign="center">
+        SC2 Co-op Picker
+      </Heading>
+      <table width="100%">
+        <thead>
+          <tr>
+            <td />
+            {VARIANTS.map((variant, key) => (
+              <th
+                key={key}
+                scope="col"
+                style={{ cursor: "pointer" }}
+                onClick={() =>
+                  setState((state) => toggleAvailable(state, null, variant))
+                }
+                align="center"
+              >
+                {variant}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {COMMANDERS.map((commander, key) => (
+            <tr key={key}>
+              <th
+                scope="row"
+                style={{ cursor: "pointer" }}
+                onClick={() =>
+                  setState((state) => toggleAvailable(state, commander, null))
+                }
+                align="center"
+              >
+                <img
+                  src={COMMANDER_PORTAITS[commander]}
+                  alt={commander}
+                  width="48px"
+                  height="48px"
+                />
+              </th>
+              {VARIANTS.map((variant, key) => (
+                <td key={key} align="center">
+                  <input
+                    type="checkbox"
+                    style={{ cursor: "pointer" }}
+                    checked={isAvailable(state, commander, variant)}
+                    onChange={() =>
                       setState((state) =>
-                        toggleAvailable(state, commander, null),
+                        toggleAvailable(state, commander, variant),
                       )
                     }
-                    align="center"
-                    padding="none"
-                  >
-                    <img
-                      src={COMMANDER_PORTAITS[commander]}
-                      alt={commander}
-                      className={styles.portrait}
-                    />
-                  </TableCell>
-                  {VARIANTS.map((variant, key) => (
-                    <TableCell key={key} align="center">
-                      <input
-                        type="checkbox"
-                        checked={isAvailable(state, commander, variant)}
-                        onChange={() =>
-                          setState((state) =>
-                            toggleAvailable(state, commander, variant),
-                          )
-                        }
-                      />
-                    </TableCell>
-                  ))}
-                </TableRow>
+                  />
+                </td>
               ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
-      <Box px={2} display="flex">
-        <Box mx={1}>
-          <Button
-            color="default"
-            onClick={() =>
-              setState((state) => setAvailable(state, null, null, true))
-            }
-          >
-            Check all
-          </Button>
-        </Box>
-        <Box mx={1}>
-          <Button
-            color="default"
-            onClick={() =>
-              setState((state) => setAvailable(state, null, null, false))
-            }
-          >
-            Uncheck all
-          </Button>
-        </Box>
-      </Box>
-      <Box p={2} display="flex" alignItems="center">
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <Box my={2}>
         <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          endIcon={<Casino />}
-          onClick={pickRandom}
+          mx={2}
+          color="default"
+          onClick={() =>
+            setState((state) => setAvailable(state, null, null, true))
+          }
         >
+          Check all
+        </Button>
+        <Button
+          color="default"
+          onClick={() =>
+            setState((state) => setAvailable(state, null, null, false))
+          }
+        >
+          Uncheck all
+        </Button>
+      </Box>
+      <Box my={2}>
+        <Button mx={2} onClick={pickRandom}>
           {"I'm feeling lucky"}
         </Button>
         {result && (
-          <>
-            <Box px={3}>You shall play:</Box>
-            <img
-              src={COMMANDER_PORTAITS[result.commander]}
-              className={styles.portrait}
-            />
-            <Box pl={3}>{result.variant}</Box>
-          </>
+          <Box ml={12}>
+            <Box>You shall play:</Box>
+            <Box>
+              <img src={COMMANDER_PORTAITS[result.commander]} />
+            </Box>
+            <Box>{result.variant}</Box>
+          </Box>
         )}
       </Box>
-    </>
+    </Container>
   );
 };

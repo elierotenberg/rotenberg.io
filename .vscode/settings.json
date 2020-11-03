@@ -10,7 +10,6 @@
     "javascript",
     "javascriptreact"
   ],
-  "eslint.enable": true,
   "eslint.packageManager": "npm",
   "eslint.validate": [
     "javascript",

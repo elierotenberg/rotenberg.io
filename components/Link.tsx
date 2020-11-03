@@ -1,60 +1,48 @@
-import NextLink, { LinkProps as NextLinkProps } from "next/link";
+// Courtesy of https://github.com/chakra-ui/chakra-ui/blob/develop/examples/nextjs-typescript/components/NextChakraLink.tsx
+
+import React, {
+  ElementType,
+  FunctionComponent,
+  PropsWithChildren,
+} from "react";
+import NextLink from "next/link";
+import { LinkProps as NextLinkProps } from "next/dist/client/link";
 import {
-  Link as MuiLink,
-  LinkProps as MuiLinkProps,
-  makeStyles,
-  createStyles,
-} from "@material-ui/core";
-import React, { forwardRef } from "react";
-import cx from "classnames";
+  Link as ChakraLink,
+  LinkProps as ChakraLinkProps,
+} from "@chakra-ui/core";
 
-const InnerNextLink = forwardRef<HTMLAnchorElement, NextLinkProps>(
-  function InnerNextLink({ as, href, prefetch, ...props }: NextLinkProps, ref) {
-    return (
-      <NextLink href={href} prefetch={prefetch} as={as}>
-        <a ref={ref} {...props} />
-      </NextLink>
-    );
-  },
-);
+export type NextChakraLinkProps = PropsWithChildren<
+  NextLinkProps & Omit<ChakraLinkProps, "as">
+> & {
+  readonly elementType?: ElementType;
+};
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      "&:hover": {
-        color: theme.palette.secondary.main,
-      },
-    },
-  }),
-);
-
-type LinkProps = MuiLinkProps &
-  NextLinkProps & {
-    readonly external?: boolean;
-  };
-
-const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
-  { className, external, ...props }: LinkProps,
-  ref,
-) {
-  const styles = useStyles();
-  const innerProps = external
-    ? {
-        target: "_blank",
-        rel: "noopener noreferrer",
-        ...props,
-      }
-    : props;
-
+//  Has to be a new component because both chakra and next share the `as` keyword
+export const Link: FunctionComponent<NextChakraLinkProps> = ({
+  href,
+  as,
+  replace,
+  scroll,
+  shallow,
+  prefetch,
+  children,
+  elementType,
+  ...chakraProps
+}: NextChakraLinkProps) => {
   return (
-    <MuiLink
-      component={external ? "a" : InnerNextLink}
-      ref={ref}
-      underline={props.underline ?? "none"}
-      className={cx(className, styles.root)}
-      {...innerProps}
-    />
+    <NextLink
+      passHref={true}
+      href={href}
+      as={as}
+      replace={replace}
+      scroll={scroll}
+      shallow={shallow}
+      prefetch={prefetch}
+    >
+      <ChakraLink as={elementType} {...chakraProps}>
+        {children}
+      </ChakraLink>
+    </NextLink>
   );
-});
-
-export { Link };
+};
