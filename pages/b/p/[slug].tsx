@@ -1,12 +1,8 @@
 import { GetStaticPaths, GetStaticProps } from "next";
 import React, { FunctionComponent } from "react";
-import Head from "next/head";
 
 import { IBlogPostData, loadBlogPosts } from "../../../lib/Blog";
 import { BlogPost } from "../../../components/Blog/BlogPost";
-import { useCanonicalUrl } from "../../../lib/url";
-import { NavBar } from "../../../components/NavBar";
-import { Footer } from "../../../components/Footer";
 
 interface ISlugProps {
   readonly blogPost: IBlogPostData;
@@ -42,19 +38,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-const Slug: FunctionComponent<ISlugProps> = ({ blogPost }) => {
-  const link = useCanonicalUrl();
-  return (
-    <>
-      <Head>
-        <title>{blogPost.title}</title>
-        {link}
-      </Head>
-      <NavBar />
-      <BlogPost blogPost={blogPost} />
-      <Footer />
-    </>
-  );
-};
+const Slug: FunctionComponent<ISlugProps> = ({ blogPost }) => (
+  <BlogPost blogPost={blogPost} />
+);
 
 export default Slug;

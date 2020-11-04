@@ -3,10 +3,16 @@ slug: modern-programming-glossary
 title: Modern Programming Glossary
 date: 2020-11-03T12:00:00.000Z
 status: published
+lang: en
 tags:
   - programming
   - satire
+abstract: >
+  Learn how to properly understand Modern Programming technical terms.
+cover: /media/blog/modern-programming-glossary/blazingly-fast.jpg
 ---
+
+!["Blazingly Fast: Modern Programming Glossary](/media/blog/modern-programming-glossary/blazingly-fast.jpg "Credits dev.to/rly")
 
 <i>Disclaimer: I spent a LOT of time browsing Github, and read a lot of READMEs. This post is a satire, and many great repos / landing pages feature some of the following idioms. I don't mean to offend dedicated maintainers & docs writers, however funny I find dev-targeted marketing tropes.</i>
 

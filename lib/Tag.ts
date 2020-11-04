@@ -12,3 +12,8 @@ export const parseTag = (input: unknown): Tag => {
   }
   throw new Error("not a tag");
 };
+
+export const flattenTag = (tag: Tag): string =>
+  typeof tag === "string" ? tag : tag.label;
+
+export const flattenTags = (tags: Tag[]): string[] => tags.map(flattenTag);
