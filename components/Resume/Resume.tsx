@@ -1,5 +1,7 @@
 import React, { FunctionComponent } from "react";
-import { Container, List, ListItem } from "@chakra-ui/core";
+import { List, ListItem } from "@chakra-ui/core";
+
+import { Page } from "../Page";
 
 import { Header } from "./Header";
 import { Current } from "./Current";
@@ -10,7 +12,7 @@ import { Interests } from "./Interests";
 
 export const Resume: FunctionComponent = () => {
   return (
-    <Container p={4} maxWidth="80ch">
+    <Page withFooter={true} withNavBar={true} title="Elie Rotenberg" lang="en">
       <List alignItems="flex-start" spacing={4}>
         <ListItem as="header">
           <Header />
@@ -31,6 +33,6 @@ export const Resume: FunctionComponent = () => {
           <Education />
         </ListItem>
       </List>
-    </Container>
+    </Page>
   );
 };

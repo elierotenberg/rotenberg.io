@@ -1,8 +1,10 @@
 import { useRouter } from "next/router";
-import React, { useEffect, ReactNode } from "react";
+import React, { useEffect, ReactNode, Fragment } from "react";
 
 const canonicalBaseUrl = process.env.NEXT_PUBLIC_CANONICAL_BASE_URL;
-const allowBaseUrl = (process.env.NEXT_PUBLIC_ALLOW_BASE_URL ?? "")
+const allowBaseUrlPatterns = (
+  process.env.NEXT_PUBLIC_ALLOW_BASE_URL_PATTERNS ?? ""
+)
   .split(" ")
   .filter((baseUrl) => baseUrl.length > 0);
 
@@ -10,14 +12,23 @@ const useCanonicalUrl = (): ReactNode => {
   const { asPath } = useRouter();
 
   const canonicalHref = `${canonicalBaseUrl}${asPath}`;
-  const allowHref = allowBaseUrl.map((baseUrl) => `${baseUrl}${asPath}`);
   useEffect(() => {
-    if (![canonicalHref, ...allowHref].includes(window.location.href)) {
+    if (
+      !allowBaseUrlPatterns.some((baseUrlPattern) =>
+        window.location.href.includes(baseUrlPattern),
+      ) &&
+      canonicalHref !== window.location.href
+    ) {
       window.location.assign(canonicalHref);
     }
-  }, [canonicalHref, allowHref]);
+  }, [canonicalHref, canonicalHref]);
 
-  return <link rel="canonical" href={canonicalHref} />;
+  return (
+    <Fragment>
+      <link rel="canonical" href={canonicalHref} />
+      <meta property="og:url" content={canonicalHref} />
+    </Fragment>
+  );
 };
 
 export { useCanonicalUrl };

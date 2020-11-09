@@ -6,4 +6,5 @@ module.exports = withBundleAnalyzer({
     config.node.fs = "empty";
     return config;
   },
+  enabled: process.env.ANALYZE_BUNDLE === "1",
 });

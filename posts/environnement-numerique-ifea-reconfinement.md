@@ -1,0 +1,137 @@
+---
+slug: environnement-numerique-ifea-reconfinement
+title: L'environnement numérique iféa à l'école à l'heure du reconfinement
+date: 2020-11-09T12:00:00.000Z
+status: published
+lang: fr
+tags:
+  - chromebook
+  - confinement
+  - covid
+  - digital tools
+  - ed tech
+  - education
+  - google for education
+  - iféa
+  - continuité pédagogique
+abstract: >
+  Un meilleur environnement numérique pour l'école est possible. Sa mise en place permet une meilleure gestion des défis de la crise sanitaire.
+cover: /media/blog/environnement-numerique-ifea-reconfinement/chromebook.jpg
+---
+
+En 2020, **l'utilisation du numérique à l'école fait encore débat**. Alors qu'on demande aux commerces de proximité de passer au [click & collect](https://www.economie.gouv.fr/le-click-and-collect-est-possible-pendant-le-confinement), on peine toujours à mettre en place des environnements numériques dans les établissemments scolaires, élémentaires et collège.
+
+L'un des raisons d'être de notre projet [iféa](https://ifea.education) est de **démontrer la faisabilité et l'efficacité d'approches innovantes** en matière d'éducation. L'une de ses composantes est un environnement numérique simple mais robuste, très intégré dans le quotidien de l'école - et non cantonné à des "salles informatiques" qui doivent être réservées à l'avance, en dehors desquelles le numérique n'est pas utilisable.
+
+Notre choix s'est déjà révélé très pertinent même avant le reconfinement, mais avec celui-ci, il représente une brique cruciale.
+
+# Les ordinateurs
+
+**Chaque enfant se voit confier un ordinateur personnel** dont il a la responsabilité. Nous avons opté pour le [Chromebook Spin 512](https://www.acer.com/ac/fr/FR/content/professional-series/acerchromebook512). Ce sont des ordinateurs convertibles en tablette, tactiles et munis d'un stylet et d'une webcam. L'environnement [Chrome OS](https://support.google.com/chromebook/answer/3265094?hl=fr) est simple d'utilisation et sécurisé. Il s'intègre très bien avec les outils majoritairement web que nous utilisons.
+
+![Chromebook chez iféa](/media/blog/environnement-numerique-ifea-reconfinement/chromebook.jpg "L'ordinateur est un outil parmi d'autres, il complète les autres outils sans les remplacer")
+
+# L'accès Internet
+
+L'école est équipée d'une **fibre très haut** débit 2Gps et d'une **couverture wifi** d'excellente qualité dans **toutes les salles**, entièrement géré par notre prestataire [Scipio](https://scipio.fr/). Le réseau est muni d'un filtre pour les contenus inappropriés (pornographie, contenu haineux ou illicite...) mais reste très ouvert. Les ordinateurs sont préconfigurés pour se connecter au wifi de l'école sur un sous-réseau dédié.
+
+![Le routeur de l'école](/media/blog/environnement-numerique-ifea-reconfinement/reseau.jpg "Caché dans une armoire, notre équipement réseau")
+
+# Les salles de classe
+
+Chaque salle est équipée d'un **vidéoprojecteur interactif**. Les enseignants et les enfants peuvent partager leur écran simplement en branchant un câble. Le tableau blanc est "normal", c'est à dire qu'on peut y écrire au feutre, mais on peut aussi l'utiliser comme une surface tactile avec un stylet.
+
+![Les salles de classe](/media/blog/environnement-numerique-ifea-reconfinement/salle-de-classe.jpg "Le tableau interactif permet un usage croisé du numérique et du physique")
+
+# Les logiciels et outils
+
+Nous utilisons beaucoup **[Google for Education](https://edu.google.com/)** [sous le contrôle de la RGDP](https://cloud.google.com/security/gdpr) :
+
+- Drive / Docs / Slides pour l'édition et le partage de documents,
+- [Classrooom](https://support.google.com/edu/classroom/answer/6020279?hl=fr) pour les supports pédagogiques (cours, exercices, devoirs...),
+- Calendar pour les emplois du temps,
+- [Jamboard](https://support.google.com/jamboard/answer/7424836?hl=fr) pour les tableaux interactifs partagés.
+
+![Google for Education](/media/blog/environnement-numerique-ifea-reconfinement/classroom.jpg "Les différentes briques sont bien intégrées, leur utilisation est fluide et permet de rester concentré sur le sujet du cours")
+
+Nous utilisons aussi **d'autres outils pédagogiques plus spécifiques** : [Geogebra](https://www.geogebra.org/?lang=fr) et [Mathador](https://www.mathador.fr/) pour les maths, [Projet Voltaire](https://www.projet-voltaire.fr/) pour le français...
+
+Nous utilisons aussi les nombreuses **bases de connaissances en ligne** ([Wikipedia](https://fr.wikipedia.org//), [Vikidia](https://fr.vikidia.org/), [Merriam-Webster](https://www.merriam-webster.com/)...) et les manuels numériques en complément des manuels physiques.
+
+L'utilisation de certains logiciels soulève bien entendu des problématiques. L'utilisation des outils Google peut faire l'objet de critiques. Il serait idéal qu'il existe des solutions libres et européennes, mais ce n'est malheureusement pas le cas pour l'instant. De même, il faut être très prudent vis à vis des promesses des outils qui se revendiquent des sciences cognitives, s'ils n'ont pas fait l'objet de validations rigoureuses.
+
+Souvent, les établissements scolaires "cochent la case" du numérique avec un outil comme Pronote. Or, il s'agit simplement d'un outil de gestion administrative (par ailleurs propriétaire, fermé, très peu interopérable, et dont le web n'est clairement pas l'environnement natif). Les fonctionalités dites "ENT" sont vétustes, mais leur existence en surface permet de se dédouaner de la responsabilité de mettre en place des outils réellement adaptés.
+
+# L'application _iféa school_
+
+Nous avons souhaité inclure dans notre environnement numérique une constellation d'outils qui évolue et s'enrichit constamment. Pour en simplifier l'utilisation, autant pour les élèves que pour leurs parents et leurs enseignants, **nous avons développé notre propre web-app, _iféa school_**. C'est le **point d'entrée unique** pour tous les outils. Elle est pré-installée sur tous les Chromebooks mais elle est accessible immédiatement et sans installation sur tous les supports (Windows, Mac, iOS, Android...) à l'aide d'un **compte unique**.
+
+![L'application iféa school](/media/blog/environnement-numerique-ifea-reconfinement/app-ifea-school.jpg "L'app iféa school est une simple couche qui donne un accès unifié à toutes les briques pour les enfants et leurs parents : calendrier, carnet de bord, devoirs...")
+
+Quand elle sera mature, notre objectif est de partager l'app _iféa school_ ainsi que tous les autres outils que nous développerons avec une licence **open-source** très permissive. Nous espérons ainsi contribuer à construire un **écosystème ouvert et intéropérable** que nous jugeons absolument indispensable.
+
+# Le numérique au quotidien
+
+Avec un environnement aussi complet, le numérique n'est pas un sujet isolé disponible uniquement en salle informatique. **Les outils font partie intégrante de la vie scolaire**.
+
+## Les ordinateurs
+
+Le matin, les élèves prennent leur ordinateur rangé dans leur casier personnel (ou le ramènent dans leur sac s'ils l'avaient emmené chez eux). Ils restent fermés tant que l'enseignant n'a pas demandé de les ouvrir. Le soir, si les parents le permettent, ils peuvent rentrer chez eux avec. Ils ont la responsabilité de prendre soin de leur matériel - une responsabilité qu'ils honorent, puisqu'ils seraient les premiers à être pénalisés.
+
+## Le numérique en cours
+
+Au cours d'une séance, l'enseignant intègre dans son cours l'utilisation ponctuelle d'outils. Ainsi un cours de géographie peut inclure un jeu de piste sur Google Earth. Un cours d'anglais peut être illustré par une vidéo issue d'un journal TV américain de la veille qu'il faudra ensuite sous-titrer. Un cours de mathématique peut s'enrichir d'une vidéo pédagogique pour éclairer un concept. Ces activités ne sont pas systématiques; elles sont utilisées judicieusement par les enseignants pour enrichir leurs cours.
+
+## Les traces numériques
+
+**Tous les documents utilisés en cours sont disponibles en version numérique** et archivés selon une organisation pensée par l'enseignant, même ceux distribués au format papier. Les exercices effectués au tableau (calculs, annotation de cartes...) sont enregistrés. Tous les devoirs, qu'ils soient numériques ou non, sont ajoutés dans l'emploi du temps de l'élève. Le déroulement des séances est consigné dans le **carnet de bord numérique de la classe**, qui est accessible directement depuis l'app iféa aux enfants et à leurs parents, qui l'utilisent tous les jours.
+
+Grâce à ces traces numériques, l'organisation des devoirs et de la **réactivation cognitive** est simple et efficace : tous les devoirs sont indiqués dans l'agenda, avec des références directes aux supports pédagogiques et aux exercices. Les parents voient le détail des activités dans l'app, et peuvent prolonger la discussion à la maison.
+
+Sur un temps plus long, cette structure permet d'**organiser la progression dans la durée**. On peut ainsi réactiver des thèmes abordés plusieurs semaines ou mois auparavant; ou suivre l'évolution de l'acquisition des compétences.
+
+# Continuité pédagogique
+
+L'intégration très profonde du numérique dans le quotidien facilite considérablement la **continuité pédagogique à distance**.
+
+## L'élève à distance...
+
+Lorsqu'un enfant ne peut être présent dans la salle de classe, il dispose toujours de son ordinateur. Il a accès aux mêmes documents et activités que les autres. Il peut même participer aux séances à distance puisque les enseignants peuvent transmettre la vidéo et le son en direct.
+
+## ... ou l'enseignant à distance
+
+Ces derniers jours, certains enseignants ont malheureusement été déclarés cas contact et ont dû rester confinés. Mais en pratique, la perturbation a été minime. **Ils font cours depuis leur domicile** par l'intermédiaire de leur propre Chromebook : projetés sur l'écran, avec une visibilité sur la salle de classe, et travaillant sur le tableau interactif partagé entre leur écran tactile et ceux des élèves.
+
+![Téléprésence pendant le confinement](/media/blog/environnement-numerique-ifea-reconfinement/telepresence-confinement.jpg "Cas contact, notre prof de maths doit restée confinée. Bien équipés et formés, les élèves et leurs enseignants peuvent continuer les apprentissages.")
+
+![Activités pendant le confinement](/media/blog/environnement-numerique-ifea-reconfinement/interactivite-confinement.jpg "L'écran partagé reste interactif à distance !")
+
+Le résultat a dépassé toutes nos espérances et représente un succès considérable. Non seulement nous utiliserons ces outils pour faire face à la crise sanitaire, mais nous étendrons leur usage pour soutenir d'autres situations difficiles, comme par exemple la convalescence ou la phobie scolaire.
+
+# Responsabilité et discernement
+
+Les outils numériques et particulièrement l'accès Internet permettent une ouverture sur le monde sans précédent. Leur utilisation doit donc impérativement être mesurée, et s'accompagner d'une éducation civique appropriée : respect d'autrui y compris par l'intermédiaire des écrans, travail critique sur les sources, protection des données... Ce travail spécifique est une prolongation naturelle des valeurs et des attitudes déjà essentielles dans l'éducation de la personne et du citoyen. Il doit s'accompagner d'une rigueur exemplaire de la part des adultes, en particulier en terme de protection des données : pas question de faire circuler des dossiers individuels sur des clés USB volantes, ou d'utiliser `password1!` comme mot de passe unique !
+
+L'utilisation du numérique au sens large est fréquemment l'objet de vives réactions sur la base de craintes caricaturales. On dénonce les réseaux sociaux, les fake news, le plagiat, la toute-puissance GAFAMs... Et c'est précisément parce que ces enjeux sont importants qu'on ne peut les ignorer et qu'on doit accompagner les enfants plutôt que de laisser livrés à eux-mêmes.
+
+# Vers une mise en place généralisée ?
+
+Les conditions à réunir pour un bon fonctionnement de l'environnement numérique sont :
+
+- un ordinateur personnel fonctionnel et sécurisé pour chaque élève et chaque enseignant,
+- un réseau très haut débit et surtout très fiable,
+- des salles équipées de tableaux interactifs,
+- un écosystème applicatif complet et évolutif,
+- une formation adaptée de tous les acteurs, à la fois technique et civique.
+
+Sur le plan budgétaire, l'équation est assez simple. Pour chaque enfant, le coût d'un ordinateur, d'une excellente connexion, des licences pour les outils et les contenus, l'aménagement des salles, la gestion et la maintenance du parc informatique, s'élève à **moins de 400€ par an**. Pour référence, le [budget annuel consacré à un collégien en France est supérieur à 8500€](https://www.education.gouv.fr/reperes-et-references-statistiques-sur-les-enseignements-la-formation-et-la-recherche-2019-3806).
+
+**La barrière à la généralisation de ce fonctionnement n'est donc pas financière.**
+
+En revanche, la mise en place demande beaucoup d'efforts et l'apprentissage de nouveaux usages qui impliquent tous les acteurs d'un établissement scolaire : élèves, enseignants, personnel administratif, parents... Sur ce plan, les choses évoluent. Les enfants qui entrent en sixème cette année sont nés après l'iPhone. Leurs parents comme leurs enseignants ont un smartphone qu'ils utilisent quotidiennement. Et si la crise sanitaire a bien démontré une chose, c'est **notre capacité collective à adapter nos usages**.
+
+**Nous souhaitons partager le fruit de notre expérience avec tous les établissements scolaires et les enseignants qui voudraient suivre cette direction**. Des solutions existent qui permettent d'enrichir en profondeur les apprentissages.
+
+**Le numérique ne devrait pas être une innovation**. Son utilisation doit faire l'objet de discernement et de responsabilité. Sa mise en place n'est pas immédiate et elle demande des efforts. Mais le jeu en vaut largement la chandelle - et il n'est pas acceptable de refuser aux enfants et aux enseignants tout ce qu'il peut offrir au prétexte des peurs de l'arrière-garde.
+
+<i>Crédits photos: [iféa](https://ifea.education)</i>
