@@ -10,8 +10,8 @@
     "start": "next start",
     "deploy": "next build && next export && firebase deploy",
     "localtunnel:dev": "lt --port 3000",
-    "localtunnel:dry-run": "lt --port 5000",
-    "dry-run": "npm run build && npm run export && firebase emulators:start"
+    "localtunnel:preview": "lt --port 5000",
+    "preview": "npm run build && npm run export && firebase emulators:start"
   },
   "dependencies": {
     "@chakra-ui/core": "^1.0.0-rc.5",

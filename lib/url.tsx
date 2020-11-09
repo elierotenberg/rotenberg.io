@@ -8,7 +8,7 @@ const allowBaseUrlPatterns = (
   .split(" ")
   .filter((baseUrl) => baseUrl.length > 0);
 
-const useCanonicalUrl = (): ReactNode => {
+export const useCanonicalUrlLink = (): ReactNode => {
   const { asPath } = useRouter();
 
   const canonicalHref = `${canonicalBaseUrl}${asPath}`;
@@ -31,4 +31,5 @@ const useCanonicalUrl = (): ReactNode => {
   );
 };
 
-export { useCanonicalUrl };
+export const useCanonicalUrl = (path: string): string =>
+  `${canonicalBaseUrl}${path}`;

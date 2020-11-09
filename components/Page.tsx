@@ -2,7 +2,7 @@ import Head from "next/head";
 import React, { FunctionComponent, ReactNode } from "react";
 import { Container, Box } from "@chakra-ui/core";
 
-import { useCanonicalUrl } from "../lib/url";
+import { useCanonicalUrlLink } from "../lib/url";
 
 import { Footer } from "./Footer";
 import { NavBar } from "./NavBar";
@@ -24,7 +24,7 @@ export const Page: FunctionComponent<IPageProps> = ({
   lang,
   title,
 }) => {
-  const link = useCanonicalUrl();
+  const link = useCanonicalUrlLink();
   return (
     <>
       <Head>

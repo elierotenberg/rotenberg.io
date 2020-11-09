@@ -5,6 +5,7 @@ import React, { Fragment, FunctionComponent } from "react";
 import { IBlogPostData } from "../../lib/Blog";
 import { flattenTags } from "../../lib/Tag";
 import { translations } from "../../lib/translations";
+import { useCanonicalUrl } from "../../lib/url";
 import { Link } from "../Link";
 import { Markdown } from "../Markdown/Markdown";
 import { Page } from "../Page";
@@ -33,8 +34,16 @@ export const BlogPost: FunctionComponent<IBlogPostProps> = ({ blogPost }) => {
           <meta property="og:title" content={blogPost.title} />
           <meta property="og:type" content="article" />
           <meta property="og:description" content={blogPost.abstract} />
-          <meta property="og:image" content={blogPost.cover} />
+          <meta property="og:image" content={useCanonicalUrl(blogPost.cover)} />
           <meta property="og:locale" content={blogPost.lang} />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:creator" content="@elierotenberg" />
+          <meta name="twitter:title" content={blogPost.title} />
+          <meta name="twitter:description" content={blogPost.abstract} />
+          <meta
+            name="twitter:image"
+            content={useCanonicalUrl(blogPost.cover)}
+          />
         </Fragment>
       }
     >

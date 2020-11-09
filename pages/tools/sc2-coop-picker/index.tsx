@@ -1,11 +1,11 @@
 import React, { FunctionComponent } from "react";
 import Head from "next/head";
 
-import { useCanonicalUrl } from "../../../lib/url";
+import { useCanonicalUrlLink } from "../../../lib/url";
 import { Sc2CoopPickerPage } from "../../../components/Sc2CoopPicker/Sc2CoopPicker";
 
 const Index: FunctionComponent = () => {
-  const link = useCanonicalUrl();
+  const link = useCanonicalUrlLink();
   return (
     <>
       <Head>
