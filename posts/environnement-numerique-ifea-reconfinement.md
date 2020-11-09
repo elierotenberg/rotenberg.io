@@ -21,7 +21,7 @@ cover: /media/blog/environnement-numerique-ifea-reconfinement/chromebook.jpg
 
 En 2020, **l'utilisation du numérique à l'école fait encore débat**. Alors qu'on demande aux commerces de proximité de passer au [click & collect](https://www.economie.gouv.fr/le-click-and-collect-est-possible-pendant-le-confinement), on peine toujours à mettre en place des environnements numériques dans les établissemments scolaires, élémentaires et collège.
 
-L'un des raisons d'être de notre projet [iféa](https://ifea.education) est de **démontrer la faisabilité et l'efficacité d'approches innovantes** en matière d'éducation. L'une de ses composantes est un environnement numérique simple mais robuste, très intégré dans le quotidien de l'école - et non cantonné à des "salles informatiques" qui doivent être réservées à l'avance, en dehors desquelles le numérique n'est pas utilisable.
+L'une des raisons d'être de notre projet [iféa](https://ifea.education) est de **démontrer la faisabilité et l'efficacité d'approches innovantes** en matière d'éducation. L'une de ses composantes est un environnement numérique simple mais robuste, très intégré dans le quotidien de l'école - et non cantonné à des "salles informatiques" qui doivent être réservées à l'avance, en dehors desquelles le numérique n'est pas utilisable.
 
 Notre choix s'est déjà révélé très pertinent même avant le reconfinement, mais avec celui-ci, il représente une brique cruciale.
 
