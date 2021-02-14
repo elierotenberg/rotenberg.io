@@ -25,7 +25,7 @@
   ],
   "eslint.lintTask.enable": true,
   "files.associations": {
-    "*.md": "markdown",
+    "*.md": "mdx",
     "*.sql": "sql",
     "*.d.ts": "typescript"
   },
