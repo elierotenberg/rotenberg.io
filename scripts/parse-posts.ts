@@ -4,8 +4,8 @@ import { promises } from "fs";
 import globby from "globby";
 
 const main = async (): Promise<void> => {
-  const postsRoot = join(__dirname, "..", "src", "posts");
-  const files = await globby(join(postsRoot, "**", "*.mdx"));
+  const postsRoot = join(__dirname, `..`, `src`, `posts`);
+  const files = await globby(join(postsRoot, `**`, `*.mdx`));
   const loaders: string[] = [];
 
   for (const file of files) {
@@ -24,10 +24,10 @@ const main = async (): Promise<void> => {
      *****/
     import dynamic from "next/dynamic";
     
-    export const blogPostsLoaders = [${loaders.join(",\n")}]
+    export const blogPostsLoaders = [${loaders.join(`,\n`)}]
   `;
-  await promises.writeFile(join(postsRoot, "index.ts"), code, {
-    encoding: "utf8",
+  await promises.writeFile(join(postsRoot, `index.ts`), code, {
+    encoding: `utf8`,
   });
 };
 
@@ -38,7 +38,7 @@ if (require.main === module) {
   });
 } else {
   console.error(
-    "This module should only be called as main module, not imported.",
+    `This module should only be called as main module, not imported.`,
   );
   process.exit(1);
 }

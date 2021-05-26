@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 
 export type NextChakraLinkProps = PropsWithChildren<
-  NextLinkProps & Omit<ChakraLinkProps, "as">
+  NextLinkProps & Omit<ChakraLinkProps, `as`>
 > & {
   readonly elementType?: ElementType;
 };

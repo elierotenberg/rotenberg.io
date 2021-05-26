@@ -13,15 +13,16 @@ export const Education: FunctionComponent = () => (
         <>
           <Link href="https://master.cri-paris.org/" isExternal>
             Interdisciplinary Approaches to Life and the Web
-          </Link>{" "}
-          at{" "}
+          </Link>
+          {` `}
+          at{` `}
           <Link href="https://cri-paris.org" isExternal>
             Centre de Recherche Interdisciplinaire
           </Link>
         </>
       }
     >
-      {"Master's Degree in Interdisciplinary Science"}
+      {`Master's Degree in Interdisciplinary Science`}
     </PositionItem>
     <PositionItem
       date="2008"
@@ -32,8 +33,9 @@ export const Education: FunctionComponent = () => (
             isExternal
           >
             Master Program for Research in Computer Science of Paris (MPRI)
-          </Link>{" "}
-          at{" "}
+          </Link>
+          {` `}
+          at{` `}
           <Link href="https://ens-paris-saclay.fr/en" isExternal>
             École normale supérieure (Cachan)
           </Link>
@@ -41,7 +43,7 @@ export const Education: FunctionComponent = () => (
         </>
       }
     >
-      {"Master's Degree in Computer Science"}
+      {`Master's Degree in Computer Science`}
     </PositionItem>
     <PositionItem
       date="2007"
@@ -53,13 +55,13 @@ export const Education: FunctionComponent = () => (
         </>
       }
     >
-      {"Bachelor of Science in Computer Science"}
+      {`Bachelor of Science in Computer Science`}
     </PositionItem>
     <PositionItem
       date="2005 - 2007"
       description={
         <>
-          Classe préparatoire aux grandes écoles at{" "}
+          Classe préparatoire aux grandes écoles at{` `}
           <Link
             href="http://www.lycee-charlemagne.fr/cpge/presentation.php"
             isExternal
@@ -71,7 +73,7 @@ export const Education: FunctionComponent = () => (
         </>
       }
     >
-      {"CPGE MPSI/MP*"}
+      {`CPGE MPSI/MP*`}
     </PositionItem>
     <PositionItem
       date="2002 - 2005"
@@ -90,7 +92,7 @@ export const Education: FunctionComponent = () => (
       date="2002 - 2005"
       description={
         <>
-          Intensive training program in Computer Science at{" "}
+          Intensive training program in Computer Science at{` `}
           <Link href="http://www.france-ioi.org/" isExternal>
             France IOI
           </Link>

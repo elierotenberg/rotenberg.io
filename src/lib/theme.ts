@@ -1,8 +1,8 @@
 import { extendTheme } from "@chakra-ui/react";
 
 export const colors = {
-  link: "blue.600",
-  linkHover: "blue.400",
+  link: `blue.600`,
+  linkHover: `blue.400`,
 } as const;
 
 export const theme = extendTheme({
@@ -11,7 +11,7 @@ export const theme = extendTheme({
       baseStyle: {
         color: colors.link,
         _hover: {
-          textDecoration: "underline",
+          textDecoration: `underline`,
           color: colors.linkHover,
         },
       },

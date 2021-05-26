@@ -14,7 +14,7 @@ export const BlogPostCard: FunctionComponent<IBlogPostCardProps> = ({
   <Link
     href={`/b/p/${blogPost.slug}`}
     display="flex"
-    flexDirection={["column", "row"]}
+    flexDirection={[`column`, `row`]}
     alignItems="flex-start"
     justifyContent="center"
     my={4}
@@ -24,26 +24,27 @@ export const BlogPostCard: FunctionComponent<IBlogPostCardProps> = ({
     pl={4}
     backgroundColor="gray.50"
     _hover={{
-      textDecoration: "none",
-      backgroundColor: "gray.100",
+      textDecoration: `none`,
+      backgroundColor: `gray.100`,
     }}
   >
     <Box>
       <Text fontSize={12} color="gray.600">
-        {new Intl.DateTimeFormat("en", {
-          month: "short",
-          year: "numeric",
-          day: "numeric",
-        }).format(new Date(blogPost.date))}{" "}
+        {new Intl.DateTimeFormat(`en`, {
+          month: `short`,
+          year: `numeric`,
+          day: `numeric`,
+        }).format(new Date(blogPost.date))}
+        {` `}
       </Text>
-      <Heading as="h2" size="md" _hover={{ textDecoration: "underline" }}>
+      <Heading as="h2" size="md" _hover={{ textDecoration: `underline` }}>
         {blogPost.title}
       </Heading>
       <Text fontSize={14} color="gray.600">
         {blogPost.abstract}
       </Text>
       <Text fontSize={12} color="gray.400">
-        {blogPost.tags.join(", ")}
+        {blogPost.tags.join(`, `)}
       </Text>
     </Box>
     <Img

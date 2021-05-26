@@ -7,7 +7,7 @@ import {
 } from "@chakra-ui/react";
 import React, { FunctionComponent } from "react";
 
-interface ITagListProps extends Omit<ListProps, "children"> {
+interface ITagListProps extends Omit<ListProps, `children`> {
   readonly tags: string[];
   readonly tagProps?: TagProps;
 }

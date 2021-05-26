@@ -29,7 +29,7 @@ export const BlogPost: FunctionComponent<IBlogPostProps> = ({
       head={
         <Fragment>
           <meta name="description" content={blogPostData.abstract} />
-          <meta name="keywords" content={blogPostData.tags.join(", ")} />
+          <meta name="keywords" content={blogPostData.tags.join(`, `)} />
           <meta name="robots" content="index, follow" />
           <meta property="og:title" content={blogPostData.title} />
           <meta property="og:type" content="article" />
@@ -52,11 +52,11 @@ export const BlogPost: FunctionComponent<IBlogPostProps> = ({
     >
       <Box as="article">
         <Heading as="h1" fontSize={28} mb={2} mt={4}>
-          <Link href={asPath.replace(/\#.*$/, "")}>{blogPostData.title}</Link>
+          <Link href={asPath.replace(/\#.*$/, ``)}>{blogPostData.title}</Link>
         </Heading>
         <Text fontSize={14} mt={2} mb={2} fontStyle="italic">
           {translations.blog.publishedOn[
-            blogPostData.lang === "fr" ? "fr" : "en"
+            blogPostData.lang === `fr` ? `fr` : `en`
           ](new Date(blogPostData.date))}
         </Text>
         <TagList mb={4} tags={blogPostData.tags} />

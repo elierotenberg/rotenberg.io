@@ -4,20 +4,20 @@ import React, { FunctionComponent } from "react";
 import { TagList } from "../TagList";
 
 const interests = [
-  "biology",
-  "business models",
-  "cognition",
-  "complex systems",
-  "computer science",
-  "education",
-  "evolution",
-  "gaming",
-  "machine learning",
-  "maths",
-  "psychology",
-  "react",
-  "software engineering",
-  "typescript",
+  `biology`,
+  `business models`,
+  `cognition`,
+  `complex systems`,
+  `computer science`,
+  `education`,
+  `evolution`,
+  `gaming`,
+  `machine learning`,
+  `maths`,
+  `psychology`,
+  `react`,
+  `software engineering`,
+  `typescript`,
 ];
 
 export const Interests: FunctionComponent = () => (
@@ -26,6 +26,6 @@ export const Interests: FunctionComponent = () => (
       Interests
     </Heading>
     <TagList tags={interests} pl={4} />
-    <HStack style={{ maxWidth: "100%" }}></HStack>
+    <HStack style={{ maxWidth: `100%` }}></HStack>
   </VStack>
 );

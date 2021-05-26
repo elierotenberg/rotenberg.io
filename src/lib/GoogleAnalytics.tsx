@@ -1,9 +1,9 @@
 import React, { Fragment, ReactElement } from "react";
 
-export const GA_TRACKING_ID = "UA-58418549-1";
+export const GA_TRACKING_ID = `UA-58418549-1`;
 
 export const triggerPageView = (url: string): void => {
-  window.gtag("config", GA_TRACKING_ID, { page_path: url });
+  window.gtag(`config`, GA_TRACKING_ID, { page_path: url });
 };
 
 export const head: ReactElement = (

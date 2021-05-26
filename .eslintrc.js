@@ -1,42 +1,37 @@
 module.exports = {
   root: true,
-  parser: "@typescript-eslint/parser",
+  parser: `@typescript-eslint/parser`,
   extends: [
-    "plugin:@typescript-eslint/recommended",
-    "plugin:react/recommended",
-    "prettier/@typescript-eslint",
-    "plugin:prettier/recommended",
-    "plugin:import/errors",
-    "plugin:import/warnings",
-    "plugin:import/typescript",
+    `plugin:@typescript-eslint/recommended`,
+    `plugin:react/recommended`,
+    `prettier`,
+    `plugin:prettier/recommended`,
+    `plugin:import/errors`,
+    `plugin:import/warnings`,
+    `plugin:import/typescript`,
   ],
   settings: {
     "import/parsers": {
-      "@typescript-eslint/parser": [".ts", ".d.ts", ".tsx"],
+      "@typescript-eslint/parser": [`.ts`, `.d.ts`, `.tsx`],
     },
     react: {
-      version: "detect",
+      version: `detect`,
     },
   },
   parserOptions: {
     ecmaVersion: 2018,
-    sourceType: "module",
+    sourceType: `module`,
     jsx: true,
   },
   rules: {
-    "prettier/prettier": [1, { trailingComma: "all", endOfLine: "auto" }],
-    "@typescript-eslint/no-unused-vars": [1, { argsIgnorePattern: "^_" }],
+    "prettier/prettier": [1, { trailingComma: `all`, endOfLine: `auto` }],
+    "@typescript-eslint/no-unused-vars": [1, { argsIgnorePattern: `^_` }],
     "@typescript-eslint/naming-convention": [
-      "error",
+      `error`,
       {
-        selector: "interface",
-        format: ["PascalCase"],
-        prefix: ["I"],
-      },
-      {
-        selector: "variableLike",
-        format: ["strictCamelCase", "UPPER_CASE", "StrictPascalCase"],
-        leadingUnderscore: "allow",
+        selector: `variableLike`,
+        format: [`strictCamelCase`, `UPPER_CASE`, `StrictPascalCase`],
+        leadingUnderscore: `allow`,
       },
     ],
     "@typescript-eslint/explicit-function-return-type": [
@@ -46,19 +41,20 @@ module.exports = {
         allowTypedFunctionExpressions: true,
       },
     ],
-    "object-shorthand": [1, "always"],
+    quotes: [1, `backtick`],
+    "object-shorthand": [1, `always`],
     "import/order": [
       1,
       {
         groups: [
-          "builtin",
-          "external",
-          "internal",
-          "parent",
-          "sibling",
-          "index",
+          `builtin`,
+          `external`,
+          `internal`,
+          `parent`,
+          `sibling`,
+          `index`,
         ],
-        "newlines-between": "always",
+        "newlines-between": `always`,
       },
     ],
     "react/prop-types": 0, // until https://github.com/yannickcr/eslint-plugin-react/issues/2654 is resolved

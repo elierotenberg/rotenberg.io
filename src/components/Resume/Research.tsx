@@ -33,18 +33,20 @@ export const Research: FunctionComponent = () => (
       date="2010 - 2014"
       description={
         <>
-          Complex Systems applied to Internet Topology , supervised by{" "}
+          Complex Systems applied to Internet Topology , supervised by{` `}
           <Link
             href="https://perso.ens-lyon.fr/christophe.crespelle/"
             isExternal
           >
             Christophe Crespelle
-          </Link>{" "}
-          and{" "}
+          </Link>
+          {` `}
+          and{` `}
           <Link href="https://www-complexnetworks.lip6.fr/~latapy/" isExternal>
             Matthieu Latapy
-          </Link>{" "}
-          at{" "}
+          </Link>
+          {` `}
+          at{` `}
           <Link href="http://www.complexnetworks.fr/" isExternal>
             LIP6 / Complex Networks
           </Link>
@@ -97,21 +99,23 @@ export const Research: FunctionComponent = () => (
       date="2010"
       description={
         <>
-          Network models in social sciences, supervised by{" "}
+          Network models in social sciences, supervised by{` `}
           <Link
             href="https://medialab.sciencespo.fr/en/people/tommaso-venturini/"
             isExternal
           >
             Tommaso venturini
-          </Link>{" "}
-          and{" "}
+          </Link>
+          {` `}
+          and{` `}
           <Link
             href="https://medialab.sciencespo.fr/en/people/paul-girard/"
             isExternal
           >
             Paul Girard
-          </Link>{" "}
-          at{" "}
+          </Link>
+          {` `}
+          at{` `}
           <Link href="https://medialab.sciencespo.fr/" isExternal>
             médialab Sciences Po
           </Link>
@@ -124,14 +128,15 @@ export const Research: FunctionComponent = () => (
       date="2010"
       description={
         <>
-          Diffusion in online communities supervised by{" "}
+          Diffusion in online communities supervised by{` `}
           <Link
             href="https://medialab.sciencespo.fr/equipe/jean-philippe-cointet/"
             isExternal
           >
             Jean-Philippe Cointet
-          </Link>{" "}
-          at{" "}
+          </Link>
+          {` `}
+          at{` `}
           <Link href="https://iscpif.fr/" isExternal>
             ISC Paris
           </Link>
@@ -144,14 +149,15 @@ export const Research: FunctionComponent = () => (
       date="2009"
       description={
         <>
-          Emergence of Cooperation in Bacteria Evolution, supervied by{" "}
+          Emergence of Cooperation in Bacteria Evolution, supervied by{` `}
           <Link
             href="https://cri-paris.org/en/profile?id=330b37fd-8768-4764-94db-bc47a91828e5"
             isExternal
           >
             François Taddei
-          </Link>{" "}
-          and{" "}
+          </Link>
+          {` `}
+          and{` `}
           <Link
             href="https://cri-paris.org/en/profile?id=aea0cc49-a01d-4883-b8da-9e849425e8d7"
             isExternal

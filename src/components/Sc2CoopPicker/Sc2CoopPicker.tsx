@@ -8,72 +8,54 @@ import React, {
 } from "react";
 
 enum Commander {
-  Raynor = "Raynor",
-  Kerrigan = "Kerrigan",
-  Artanis = "Artanis",
-  Swann = "Swann",
-  Zagara = "Zagara",
-  Vorazun = "Vorazun",
-  Karax = "Karax",
-  Abathur = "Abathur",
-  Alarak = "Alarak",
-  Nova = "Nova",
-  Stukov = "Stukov",
-  Fenix = "Fenix",
-  Dehaka = "Dehaka",
-  HanAndHorner = "Han & Horner",
-  Tychus = "Tychus",
-  Zeratul = "Zeratul",
-  Stetmann = "Stetmann",
-  Mengsk = "Mengsk",
+  Raynor = `Raynor`,
+  Kerrigan = `Kerrigan`,
+  Artanis = `Artanis`,
+  Swann = `Swann`,
+  Zagara = `Zagara`,
+  Vorazun = `Vorazun`,
+  Karax = `Karax`,
+  Abathur = `Abathur`,
+  Alarak = `Alarak`,
+  Nova = `Nova`,
+  Stukov = `Stukov`,
+  Fenix = `Fenix`,
+  Dehaka = `Dehaka`,
+  HanAndHorner = `Han & Horner`,
+  Tychus = `Tychus`,
+  Zeratul = `Zeratul`,
+  Stetmann = `Stetmann`,
+  Mengsk = `Mengsk`,
 }
 
 const COMMANDERS = Object.values(Commander) as Commander[];
 
 const COMMANDER_PORTAITS: Record<Commander, string> = {
-  [Commander.Raynor]:
-    "https://vignette.wikia.nocookie.net/starcraft/images/c/cb/RaynorCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161016",
-  [Commander.Kerrigan]:
-    "https://vignette.wikia.nocookie.net/starcraft/images/8/88/KerriganCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161250",
-  [Commander.Artanis]:
-    "https://vignette.wikia.nocookie.net/starcraft/images/d/d5/ArtanisCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161327",
-  [Commander.Swann]:
-    "https://vignette.wikia.nocookie.net/starcraft/images/8/8c/SwannCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161402",
-  [Commander.Zagara]:
-    "https://vignette.wikia.nocookie.net/starcraft/images/f/f4/ZagaraCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161432",
-  [Commander.Vorazun]:
-    "https://vignette.wikia.nocookie.net/starcraft/images/4/41/VorazunCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161512",
-  [Commander.Karax]:
-    "https://vignette.wikia.nocookie.net/starcraft/images/7/7f/KaraxCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161542",
-  [Commander.Abathur]:
-    "https://vignette.wikia.nocookie.net/starcraft/images/2/2c/AbathurCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161619",
-  [Commander.Alarak]:
-    "https://vignette.wikia.nocookie.net/starcraft/images/2/28/AlarakCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161648",
-  [Commander.Nova]:
-    "https://vignette.wikia.nocookie.net/starcraft/images/3/3a/NovaCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161721",
-  [Commander.Stukov]:
-    "https://vignette.wikia.nocookie.net/starcraft/images/b/b3/StukovCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161758",
-  [Commander.Fenix]:
-    "https://vignette.wikia.nocookie.net/starcraft/images/1/16/FenixCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161831",
-  [Commander.Dehaka]:
-    "https://vignette.wikia.nocookie.net/starcraft/images/b/b0/DehakaCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161901",
-  [Commander.HanAndHorner]:
-    "https://vignette.wikia.nocookie.net/starcraft/images/f/ff/Han%26HornerCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161953",
-  [Commander.Tychus]:
-    "https://vignette.wikia.nocookie.net/starcraft/images/e/e8/TychusCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110162031",
-  [Commander.Zeratul]:
-    "https://vignette.wikia.nocookie.net/starcraft/images/5/5d/ZeratulCommanderIcon.jpeg/revision/latest/scale-to-width-down/76?cb=20191110162058",
-  [Commander.Stetmann]:
-    "https://vignette.wikia.nocookie.net/starcraft/images/1/1c/StetmannCommanderIcon.jpeg/revision/latest/scale-to-width-down/76?cb=20191110162129",
-  [Commander.Mengsk]:
-    "https://vignette.wikia.nocookie.net/starcraft/images/9/99/MengskCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110162159",
+  [Commander.Raynor]: `https://vignette.wikia.nocookie.net/starcraft/images/c/cb/RaynorCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161016`,
+  [Commander.Kerrigan]: `https://vignette.wikia.nocookie.net/starcraft/images/8/88/KerriganCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161250`,
+  [Commander.Artanis]: `https://vignette.wikia.nocookie.net/starcraft/images/d/d5/ArtanisCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161327`,
+  [Commander.Swann]: `https://vignette.wikia.nocookie.net/starcraft/images/8/8c/SwannCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161402`,
+  [Commander.Zagara]: `https://vignette.wikia.nocookie.net/starcraft/images/f/f4/ZagaraCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161432`,
+  [Commander.Vorazun]: `https://vignette.wikia.nocookie.net/starcraft/images/4/41/VorazunCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161512`,
+  [Commander.Karax]: `https://vignette.wikia.nocookie.net/starcraft/images/7/7f/KaraxCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161542`,
+  [Commander.Abathur]: `https://vignette.wikia.nocookie.net/starcraft/images/2/2c/AbathurCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161619`,
+  [Commander.Alarak]: `https://vignette.wikia.nocookie.net/starcraft/images/2/28/AlarakCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161648`,
+  [Commander.Nova]: `https://vignette.wikia.nocookie.net/starcraft/images/3/3a/NovaCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161721`,
+  [Commander.Stukov]: `https://vignette.wikia.nocookie.net/starcraft/images/b/b3/StukovCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161758`,
+  [Commander.Fenix]: `https://vignette.wikia.nocookie.net/starcraft/images/1/16/FenixCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161831`,
+  [Commander.Dehaka]: `https://vignette.wikia.nocookie.net/starcraft/images/b/b0/DehakaCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161901`,
+  [Commander.HanAndHorner]: `https://vignette.wikia.nocookie.net/starcraft/images/f/ff/Han%26HornerCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110161953`,
+  [Commander.Tychus]: `https://vignette.wikia.nocookie.net/starcraft/images/e/e8/TychusCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110162031`,
+  [Commander.Zeratul]: `https://vignette.wikia.nocookie.net/starcraft/images/5/5d/ZeratulCommanderIcon.jpeg/revision/latest/scale-to-width-down/76?cb=20191110162058`,
+  [Commander.Stetmann]: `https://vignette.wikia.nocookie.net/starcraft/images/1/1c/StetmannCommanderIcon.jpeg/revision/latest/scale-to-width-down/76?cb=20191110162129`,
+  [Commander.Mengsk]: `https://vignette.wikia.nocookie.net/starcraft/images/9/99/MengskCommanderIcon.png/revision/latest/scale-to-width-down/76?cb=20191110162159`,
 };
 
 enum Variant {
-  Vanilla = "Vanilla",
-  Prestige1 = "Prestige 1",
-  Prestige2 = "Prestige 2",
-  Prestige3 = "Prestige 3",
+  Vanilla = `Vanilla`,
+  Prestige1 = `Prestige 1`,
+  Prestige2 = `Prestige 2`,
+  Prestige3 = `Prestige 3`,
 }
 
 const VARIANTS = Object.values(Variant) as Variant[];
@@ -142,12 +124,12 @@ const DEFAULT_STATE: Sc2CoopPickerState = COMMANDERS.flatMap((commander) =>
   VARIANTS.map((variant) => ({ commander, variant, available: true })),
 );
 
-const CURRENT_VERSION = "0.0.0";
+const CURRENT_VERSION = `0.0.0`;
 
 const parseSerializedState = (input: string): Sc2CoopPickerState | null => {
   try {
     const obj = JSON.parse(input);
-    if (typeof obj !== "object" || obj === null) {
+    if (typeof obj !== `object` || obj === null) {
       return null;
     }
     if (obj.version !== CURRENT_VERSION) {
@@ -157,7 +139,7 @@ const parseSerializedState = (input: string): Sc2CoopPickerState | null => {
       return null;
     }
     for (const item of obj.state) {
-      if (typeof item !== "object" || item === null) {
+      if (typeof item !== `object` || item === null) {
         return null;
       }
       if (!COMMANDERS.includes(item.commander)) {
@@ -166,7 +148,7 @@ const parseSerializedState = (input: string): Sc2CoopPickerState | null => {
       if (!VARIANTS.includes(item.variant)) {
         return null;
       }
-      if (typeof item.available !== "boolean") {
+      if (typeof item.available !== `boolean`) {
         return null;
       }
     }
@@ -176,7 +158,7 @@ const parseSerializedState = (input: string): Sc2CoopPickerState | null => {
   }
 };
 
-const STORAGE_KEY = "Sc2CoopPickerState";
+const STORAGE_KEY = `Sc2CoopPickerState`;
 
 const getDefaultState = (): Sc2CoopPickerState => {
   const serializedState = window.localStorage.getItem(STORAGE_KEY);
@@ -239,7 +221,7 @@ export const Sc2CoopPickerPage: FunctionComponent = () => {
               <th
                 key={key}
                 scope="col"
-                style={{ cursor: "pointer" }}
+                style={{ cursor: `pointer` }}
                 onClick={() =>
                   setState((state) => toggleAvailable(state, null, variant))
                 }
@@ -255,7 +237,7 @@ export const Sc2CoopPickerPage: FunctionComponent = () => {
             <tr key={key}>
               <th
                 scope="row"
-                style={{ cursor: "pointer" }}
+                style={{ cursor: `pointer` }}
                 onClick={() =>
                   setState((state) => toggleAvailable(state, commander, null))
                 }
@@ -272,7 +254,7 @@ export const Sc2CoopPickerPage: FunctionComponent = () => {
                 <td key={key} align="center">
                   <input
                     type="checkbox"
-                    style={{ cursor: "pointer" }}
+                    style={{ cursor: `pointer` }}
                     checked={isAvailable(state, commander, variant)}
                     onChange={() =>
                       setState((state) =>
@@ -307,7 +289,7 @@ export const Sc2CoopPickerPage: FunctionComponent = () => {
       </Box>
       <Box my={2}>
         <Button mx={2} onClick={pickRandom}>
-          {"I'm feeling lucky"}
+          {`I'm feeling lucky`}
         </Button>
         {result && (
           <Box ml={12}>

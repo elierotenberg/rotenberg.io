@@ -6,19 +6,19 @@ import dynamic from "next/dynamic";
 
 export const blogPostsLoaders = [
   {
-    key: "environnement-numerique-ifea-reconfinement.mdx",
+    key: `environnement-numerique-ifea-reconfinement.mdx`,
     loadData: (): Promise<unknown> =>
-      import("./environnement-numerique-ifea-reconfinement.mdx").then(
+      import(`./environnement-numerique-ifea-reconfinement.mdx`).then(
         (module) => module.data,
       ),
     Mdx: dynamic(
-      () => import("./environnement-numerique-ifea-reconfinement.mdx"),
+      () => import(`./environnement-numerique-ifea-reconfinement.mdx`),
     ),
   },
   {
-    key: "modern-programming-glossary.mdx",
+    key: `modern-programming-glossary.mdx`,
     loadData: (): Promise<unknown> =>
-      import("./modern-programming-glossary.mdx").then((module) => module.data),
-    Mdx: dynamic(() => import("./modern-programming-glossary.mdx")),
+      import(`./modern-programming-glossary.mdx`).then((module) => module.data),
+    Mdx: dynamic(() => import(`./modern-programming-glossary.mdx`)),
   },
 ];

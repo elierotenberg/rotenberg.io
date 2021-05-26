@@ -3,9 +3,9 @@ import React, { useEffect, ReactNode, Fragment } from "react";
 
 const canonicalBaseUrl = process.env.NEXT_PUBLIC_CANONICAL_BASE_URL;
 const allowBaseUrlPatterns = (
-  process.env.NEXT_PUBLIC_ALLOW_BASE_URL_PATTERNS ?? ""
+  process.env.NEXT_PUBLIC_ALLOW_BASE_URL_PATTERNS ?? ``
 )
-  .split(" ")
+  .split(` `)
   .filter((baseUrl) => baseUrl.length > 0);
 
 export const useCanonicalUrlLink = (): ReactNode => {

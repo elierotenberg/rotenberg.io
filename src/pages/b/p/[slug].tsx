@@ -24,7 +24,7 @@ export const getStaticProps: GetStaticProps<StaticProps> = async (ctx) => {
     ({ blogPostData }) => blogPostData.slug == slug,
   );
   if (!props) {
-    throw new Error("no such blog post");
+    throw new Error(`no such blog post`);
   }
   return { props };
 };

@@ -16,23 +16,20 @@ import { Figure } from "../Figure";
 import { Heading } from "./helpers/Heading";
 import { Link } from "./helpers/Link";
 
-const CodeBlock = dynamic(() => import("../CodeBlock"));
+const CodeBlock = dynamic(() => import(`../CodeBlock`));
 
 const components: Components = {
   code: ({ children, className }) => {
     t.isString(children);
     t.isString(className);
-    const tokens = className.slice("language-".length).split("\n");
-    const lang = (tokens[tokens.length - 1].length === 0
-      ? tokens.slice(0, -1)
-      : tokens
-    ).join("\n");
+    const tokens = className.slice(`language-`.length).split(`\n`);
+    const lang = (
+      tokens[tokens.length - 1].length === 0 ? tokens.slice(0, -1) : tokens
+    ).join(`\n`);
     return <CodeBlock lang={lang}>{children}</CodeBlock>;
   },
   inlineCode: (props) => <Code {...props} />,
-  a: (props) => (
-    <Link {...((props as unknown) as ComponentProps<typeof Link>)} />
-  ),
+  a: (props) => <Link {...(props as unknown as ComponentProps<typeof Link>)} />,
   h1: (props) => (
     <Fragment>
       <Heading as="h2" mt={4} fontSize="1.5em" {...props} />

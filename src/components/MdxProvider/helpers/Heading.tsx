@@ -18,7 +18,7 @@ export const Heading: FunctionComponent<HeadingProps> = ({
   const nextChildren = useMemo((): ReactElement => {
     if (id) {
       return (
-        <Link id={id} href={asPath.replace(/\#.*$/, "") + `#${id}`}>
+        <Link id={id} href={asPath.replace(/\#.*$/, ``) + `#${id}`}>
           {children}
         </Link>
       );

@@ -9,7 +9,7 @@ export interface ILinkProps {
 }
 
 export const Link: FunctionComponent<ILinkProps> = ({ href, children }) => {
-  if (href.startsWith("#")) {
+  if (href.startsWith(`#`)) {
     return <ChakraLink href={href}>{children}</ChakraLink>;
   }
   return (
