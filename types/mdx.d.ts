@@ -1,4 +1,4 @@
-// types/mdx.d.ts
+/* eslint-disable quotes */
 declare module "*.mdx" {
   export const data: unknown;
   const MdxComponent: (props: unknown) => JSX.Element;

@@ -1,6 +1,6 @@
 {
   "name": "elie.rotenberg.io",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": true,
   "scripts": {
     "dev": "ANALYZE_BUNDLE=0 next dev",
@@ -22,16 +22,18 @@
     "@mdx-js/react": "^1.6.22",
     "@next/bundle-analyzer": "^10.2.3",
     "@next/mdx": "^10.2.3",
-    "@types/classnames": "^2.3.0",
+    "@types/chance": "^1.1.2",
     "@types/gtag.js": "0.0.4",
     "@types/node": "^15.6.1",
     "@types/react": "^17.0.8",
     "@types/react-dom": "^17.0.5",
     "@types/react-syntax-highlighter": "^13.5.0",
     "@types/styled-jsx": "^2.2.8",
+    "chance": "^1.1.7",
     "classnames": "^2.3.1",
     "framer-motion": "^4.1.17",
     "gray-matter": "^4.0.3",
+    "json-url": "^3.0.0",
     "next": "^10.2.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -40,7 +42,9 @@
     "remark-gfm": "^1.0.0",
     "remark-slug": "^6.0.0",
     "remark-toc": "^7.2.0",
-    "typed-assert": "^1.0.7"
+    "typed-assert": "^1.0.7",
+    "typed-utilities": "^1.9.0",
+    "zod": "^3.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.14.3",
