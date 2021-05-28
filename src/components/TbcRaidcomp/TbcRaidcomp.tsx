@@ -197,7 +197,7 @@ const characterClasses: CharacterClass[] = [
       },
       {
         characterSpecName: `Retribution`,
-        role: `Heal`,
+        role: `Melee`,
         iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_holy_auraoflight.jpg`,
         wowheadId: `G`,
       },
@@ -269,7 +269,7 @@ const characterClasses: CharacterClass[] = [
       },
       {
         characterSpecName: `Restoration`,
-        role: `Melee`,
+        role: `Heal`,
         iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_nature_magicimmunity.jpg`,
         wowheadId: `s`,
       },
