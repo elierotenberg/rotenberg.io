@@ -3550,7 +3550,9 @@ function encode(gdocString)
 
 end
 
-local input = "$$__INPUT__$$"
+local js = require "js"
+
+local input = js.global.fengari.ert_lua_input
 
 encoded = encode(input)
 

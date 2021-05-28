@@ -1,6 +1,7 @@
 import { Button } from "@chakra-ui/button";
 import { Chance } from "chance";
 import { MdDeleteForever, MdOpenInNew } from "react-icons/md";
+import deepEqual from "fast-deep-equal";
 import { Input } from "@chakra-ui/input";
 import {
   Container,
@@ -24,286 +25,78 @@ import React, {
 import { z } from "zod";
 import createJsonUrlCodec from "json-url";
 import { Spinner } from "@chakra-ui/spinner";
-import { Alert } from "@chakra-ui/alert";
 import { Checkbox, Heading, Icon, Textarea } from "@chakra-ui/react";
 
 import { useAsync } from "../../lib/useAsync";
 import { isNotNull } from "../../lib/types";
+import { useLocationHash } from "../../lib/useLocationHash";
 
 import ertLua from "./ert.lua";
 
+const pageTitle = `TBC Raidcomp`;
+
 declare const fengari: {
+  ert_lua_input: string;
   readonly load: (source: string) => () => unknown;
 };
 
+let runErtLua: null | (() => unknown) = null;
+
 const createErtRaidgroupsImportString = (groups: Groups): string => {
-  const input = `[[ ${groups
-    .map((group) =>
-      group.map((characterName) => characterName ?? `dummy`).join(` `),
-    )
-    .join(`\n`)} ]]`;
-  const src = ertLua.replace(`"$$__INPUT__$$"`, input);
-  return fengari.load(src)() as string;
+  if (!runErtLua) {
+    runErtLua = fengari.load(ertLua);
+  }
+  fengari.ert_lua_input = groups
+    .map((characterName) => characterName ?? `dummy`)
+    .join(` `);
+  return z.string().parse(runErtLua());
 };
 
 const jsonUrlCodec = createJsonUrlCodec(`lzw`);
 
-const Spec = z.object({
-  specName: z.string(),
+const CharacterSpec = z.object({
+  characterSpecName: z.string(),
   role: z.enum([`Tank`, `Heal`, `Ranged`, `Melee`]),
   iconHref: z.string(),
   wowheadId: z.string().length(1),
 });
 
-type Spec = z.infer<typeof Spec>;
+type CharacterSpec = z.infer<typeof CharacterSpec>;
 
-const Class = z.object({
-  className: z.string(),
+const CharacterClass = z.object({
+  characterClassName: z.string(),
   htmlColor: z.string(),
-  specs: z.array(Spec).length(3),
+  characterSpecs: z.array(CharacterSpec).length(3),
 });
 
-type Class = z.infer<typeof Class>;
-
-const classes: Class[] = [
-  {
-    className: `Druid`,
-    htmlColor: `#FF7C0A`,
-    specs: [
-      {
-        specName: `Balance`,
-        role: `Ranged`,
-        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_nature_starfall.jpg`,
-        wowheadId: `x`,
-      },
-      {
-        specName: `Feral`,
-        role: `Tank`,
-        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/ability_racial_bearform.jpg`,
-        wowheadId: `v`,
-      },
-      {
-        specName: `Restoration`,
-        role: `Heal`,
-        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_nature_healingtouch.jpg`,
-        wowheadId: `w`,
-      },
-    ],
-  },
-  {
-    className: `Hunter`,
-    htmlColor: `#AAD372`,
-    specs: [
-      {
-        specName: `Beast Mastery`,
-        role: `Ranged`,
-        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/ability_hunter_beasttaming.jpg`,
-        wowheadId: `C`,
-      },
-      {
-        specName: `Marksmanship`,
-        role: `Ranged`,
-        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/ability_marksmanship.jpg`,
-        wowheadId: `F`,
-      },
-      {
-        specName: `Survival`,
-        role: `Ranged`,
-        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/ability_hunter_swiftstrike.jpg`,
-        wowheadId: `D`,
-      },
-    ],
-  },
-  {
-    className: `Mage`,
-    htmlColor: `#3FC7EB`,
-    specs: [
-      {
-        specName: `Arcane`,
-        role: `Ranged`,
-        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_holy_magicalsentry.jpg`,
-        wowheadId: `d`,
-      },
-      {
-        specName: `Fire`,
-        role: `Ranged`,
-        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_fire_firebolt02.jpg`,
-        wowheadId: `b`,
-      },
-      {
-        specName: `Ice`,
-        role: `Ranged`,
-        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_frost_frostbolt02.jpg`,
-        wowheadId: `c`,
-      },
-    ],
-  },
-  {
-    className: `Paladin`,
-    htmlColor: `#F48CBA`,
-    specs: [
-      {
-        specName: `Holy`,
-        role: `Heal`,
-        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_holy_holybolt.jpg`,
-        wowheadId: `H`,
-      },
-      {
-        specName: `Protection`,
-        role: `Tank`,
-        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_holy_devotionaura.jpg`,
-        wowheadId: `J`,
-      },
-      {
-        specName: `Retribution`,
-        role: `Heal`,
-        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_holy_auraoflight.jpg`,
-        wowheadId: `G`,
-      },
-    ],
-  },
-  {
-    className: `Priest`,
-    htmlColor: `#eee`,
-    specs: [
-      {
-        specName: `Discipline`,
-        role: `Heal`,
-        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_holy_wordfortitude.jpg`,
-        wowheadId: `n`,
-      },
-      {
-        specName: `Holy`,
-        role: `Heal`,
-        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_holy_holybolt.jpg`,
-        wowheadId: `n`,
-      },
-      {
-        specName: `Shadow`,
-        role: `Ranged`,
-        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_shadow_shadowwordpain.jpg`,
-        wowheadId: `n`,
-      },
-    ],
-  },
-  {
-    className: `Rogue`,
-    htmlColor: `#FFF468`,
-    specs: [
-      {
-        specName: `Assassination`,
-        role: `Melee`,
-        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/ability_rogue_eviscerate.jpg`,
-        wowheadId: `k`,
-      },
-      {
-        specName: `Combat`,
-        role: `Melee`,
-        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/ability_backstab.jpg`,
-        wowheadId: `j`,
-      },
-      {
-        specName: `Subtelty`,
-        role: `Melee`,
-        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/ability_rogue_eviscerate.jpg`,
-        wowheadId: `m`,
-      },
-    ],
-  },
-  {
-    className: `Shaman`,
-    htmlColor: `#0070DD`,
-    specs: [
-      {
-        specName: `Elemental`,
-        role: `Ranged`,
-        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_nature_lightning.jpg`,
-        wowheadId: `r`,
-      },
-      {
-        specName: `Enhancement`,
-        role: `Melee`,
-        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_nature_lightningshield.jpg`,
-        wowheadId: `t`,
-      },
-      {
-        specName: `Restoration`,
-        role: `Melee`,
-        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_nature_magicimmunity.jpg`,
-        wowheadId: `s`,
-      },
-    ],
-  },
-  {
-    className: `Warlock`,
-    htmlColor: `#8788EE`,
-    specs: [
-      {
-        specName: `Affliction`,
-        role: `Ranged`,
-        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_shadow_deathcoil.jpg`,
-        wowheadId: `z`,
-      },
-      {
-        specName: `Demonology`,
-        role: `Ranged`,
-        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_shadow_metamorphosis.jpg`,
-        wowheadId: `B`,
-      },
-      {
-        specName: `Destruction`,
-        role: `Ranged`,
-        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_shadow_rainoffire.jpg`,
-        wowheadId: `y`,
-      },
-    ],
-  },
-  {
-    className: `Warrior`,
-    htmlColor: `#C69B6D`,
-    specs: [
-      {
-        specName: `Arms`,
-        role: `Melee`,
-        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/ability_rogue_eviscerate.jpg`,
-        wowheadId: `f`,
-      },
-      {
-        specName: `Fury`,
-        role: `Melee`,
-        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/ability_warrior_innerrage.jpg`,
-        wowheadId: `h`,
-      },
-      {
-        specName: `Protection`,
-        role: `Tank`,
-        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/inv_shield_06.jpg`,
-        wowheadId: `g`,
-      },
-    ],
-  },
-];
-
+type CharacterClass = z.infer<typeof CharacterClass>;
 const CharacterName = z.string();
 
 const Character = z
   .object({
     characterName: CharacterName,
-    className: z.string(),
-    specName: z.string(),
+    characterClassName: z.string(),
+    characterSpecName: z.string(),
   })
-  .refine((player) =>
-    classes.find(
-      ({ className, specs }) =>
-        className === player.className &&
-        specs.some(({ specName }) => specName === player.specName),
+  .refine((character) =>
+    characterClasses.find(
+      ({ characterClassName, characterSpecs }) =>
+        characterClassName === character.characterClassName &&
+        characterSpecs.some(
+          ({ characterSpecName }) =>
+            characterSpecName === character.characterSpecName,
+        ),
     ),
   );
 
 type Character = z.infer<typeof Character>;
-const Group = z.array(z.union([z.null(), CharacterName])).length(5);
-type Group = z.infer<typeof Group>;
-const Groups = z.array(Group).min(2);
+
+const NUM_GROUPS = 8;
+const GROUP_SIZE = 5;
+
+const Groups = z
+  .array(z.union([z.null(), CharacterName]))
+  .length(NUM_GROUPS * GROUP_SIZE);
 type Groups = z.infer<typeof Groups>;
 
 const Roster = z.object({
@@ -312,6 +105,326 @@ const Roster = z.object({
 });
 
 type Roster = z.infer<typeof Roster>;
+
+const characterClasses: CharacterClass[] = [
+  {
+    characterClassName: `Druid`,
+    htmlColor: `#FF7C0A`,
+    characterSpecs: [
+      {
+        characterSpecName: `Balance`,
+        role: `Ranged`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_nature_starfall.jpg`,
+        wowheadId: `x`,
+      },
+      {
+        characterSpecName: `Feral`,
+        role: `Tank`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/ability_racial_bearform.jpg`,
+        wowheadId: `v`,
+      },
+      {
+        characterSpecName: `Restoration`,
+        role: `Heal`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_nature_healingtouch.jpg`,
+        wowheadId: `w`,
+      },
+    ],
+  },
+  {
+    characterClassName: `Hunter`,
+    htmlColor: `#AAD372`,
+    characterSpecs: [
+      {
+        characterSpecName: `Beast Mastery`,
+        role: `Ranged`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/ability_hunter_beasttaming.jpg`,
+        wowheadId: `C`,
+      },
+      {
+        characterSpecName: `Marksmanship`,
+        role: `Ranged`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/ability_marksmanship.jpg`,
+        wowheadId: `F`,
+      },
+      {
+        characterSpecName: `Survival`,
+        role: `Ranged`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/ability_hunter_swiftstrike.jpg`,
+        wowheadId: `D`,
+      },
+    ],
+  },
+  {
+    characterClassName: `Mage`,
+    htmlColor: `#3FC7EB`,
+    characterSpecs: [
+      {
+        characterSpecName: `Arcane`,
+        role: `Ranged`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_holy_magicalsentry.jpg`,
+        wowheadId: `d`,
+      },
+      {
+        characterSpecName: `Fire`,
+        role: `Ranged`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_fire_firebolt02.jpg`,
+        wowheadId: `b`,
+      },
+      {
+        characterSpecName: `Ice`,
+        role: `Ranged`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_frost_frostbolt02.jpg`,
+        wowheadId: `c`,
+      },
+    ],
+  },
+  {
+    characterClassName: `Paladin`,
+    htmlColor: `#F48CBA`,
+    characterSpecs: [
+      {
+        characterSpecName: `Holy`,
+        role: `Heal`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_holy_holybolt.jpg`,
+        wowheadId: `H`,
+      },
+      {
+        characterSpecName: `Protection`,
+        role: `Tank`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_holy_devotionaura.jpg`,
+        wowheadId: `J`,
+      },
+      {
+        characterSpecName: `Retribution`,
+        role: `Heal`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_holy_auraoflight.jpg`,
+        wowheadId: `G`,
+      },
+    ],
+  },
+  {
+    characterClassName: `Priest`,
+    htmlColor: `#eee`,
+    characterSpecs: [
+      {
+        characterSpecName: `Discipline`,
+        role: `Heal`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_holy_wordfortitude.jpg`,
+        wowheadId: `n`,
+      },
+      {
+        characterSpecName: `Holy`,
+        role: `Heal`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_holy_holybolt.jpg`,
+        wowheadId: `n`,
+      },
+      {
+        characterSpecName: `Shadow`,
+        role: `Ranged`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_shadow_shadowwordpain.jpg`,
+        wowheadId: `n`,
+      },
+    ],
+  },
+  {
+    characterClassName: `Rogue`,
+    htmlColor: `#FFF468`,
+    characterSpecs: [
+      {
+        characterSpecName: `Assassination`,
+        role: `Melee`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/ability_rogue_eviscerate.jpg`,
+        wowheadId: `k`,
+      },
+      {
+        characterSpecName: `Combat`,
+        role: `Melee`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/ability_backstab.jpg`,
+        wowheadId: `j`,
+      },
+      {
+        characterSpecName: `Subtelty`,
+        role: `Melee`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/ability_rogue_eviscerate.jpg`,
+        wowheadId: `m`,
+      },
+    ],
+  },
+  {
+    characterClassName: `Shaman`,
+    htmlColor: `#0070DD`,
+    characterSpecs: [
+      {
+        characterSpecName: `Elemental`,
+        role: `Ranged`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_nature_lightning.jpg`,
+        wowheadId: `r`,
+      },
+      {
+        characterSpecName: `Enhancement`,
+        role: `Melee`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_nature_lightningshield.jpg`,
+        wowheadId: `t`,
+      },
+      {
+        characterSpecName: `Restoration`,
+        role: `Melee`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_nature_magicimmunity.jpg`,
+        wowheadId: `s`,
+      },
+    ],
+  },
+  {
+    characterClassName: `Warlock`,
+    htmlColor: `#8788EE`,
+    characterSpecs: [
+      {
+        characterSpecName: `Affliction`,
+        role: `Ranged`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_shadow_deathcoil.jpg`,
+        wowheadId: `z`,
+      },
+      {
+        characterSpecName: `Demonology`,
+        role: `Ranged`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_shadow_metamorphosis.jpg`,
+        wowheadId: `B`,
+      },
+      {
+        characterSpecName: `Destruction`,
+        role: `Ranged`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_shadow_rainoffire.jpg`,
+        wowheadId: `y`,
+      },
+    ],
+  },
+  {
+    characterClassName: `Warrior`,
+    htmlColor: `#C69B6D`,
+    characterSpecs: [
+      {
+        characterSpecName: `Arms`,
+        role: `Melee`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/ability_rogue_eviscerate.jpg`,
+        wowheadId: `f`,
+      },
+      {
+        characterSpecName: `Fury`,
+        role: `Melee`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/ability_warrior_innerrage.jpg`,
+        wowheadId: `h`,
+      },
+      {
+        characterSpecName: `Protection`,
+        role: `Tank`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/inv_shield_06.jpg`,
+        wowheadId: `g`,
+      },
+    ],
+  },
+];
+const findCharacterClass = (
+  characterClassName: CharacterClass[`characterClassName`],
+): CharacterClass | null =>
+  characterClasses.find(
+    (characterClass) =>
+      characterClass.characterClassName === characterClassName,
+  ) ?? null;
+
+const findCharacterSpec = (
+  { characterSpecs }: CharacterClass,
+  characterSpecName: CharacterSpec[`characterSpecName`],
+): CharacterSpec | null =>
+  characterSpecs.find(
+    (characterSpec) => characterSpec.characterSpecName === characterSpecName,
+  ) ?? null;
+
+const findCharacterClassSpecByWowheadId = (
+  wowheadId: string,
+): null | {
+  readonly characterClass: CharacterClass;
+  readonly characterSpec: CharacterSpec;
+} => {
+  for (const characterClass of characterClasses) {
+    for (const characterSpec of characterClass.characterSpecs) {
+      if (characterSpec.wowheadId === wowheadId) {
+        return { characterClass, characterSpec };
+      }
+    }
+  }
+  return null;
+};
+
+const sortCharacters = (a: Character, b: Character): number =>
+  a.characterClassName !== b.characterClassName
+    ? a.characterClassName.localeCompare(b.characterClassName)
+    : a.characterSpecName !== b.characterSpecName
+    ? a.characterSpecName.localeCompare(b.characterSpecName)
+    : a.characterName.localeCompare(b.characterName);
+
+const findCharacter = (
+  roster: Roster,
+  characterName: Character[`characterName`],
+): Character | null =>
+  roster.characters.find(
+    (character) => character.characterName === characterName,
+  ) ?? null;
+
+const zipCharacters = (
+  roster: Roster,
+): {
+  readonly character: Character;
+  readonly characterClass: CharacterClass;
+  readonly characterSpec: CharacterSpec;
+}[] =>
+  roster.characters
+    .map((character) => {
+      const characterClass = findCharacterClass(character.characterClassName);
+      if (!characterClass) {
+        return null;
+      }
+      const characterSpec = findCharacterSpec(
+        characterClass,
+        character.characterSpecName,
+      );
+      if (!characterSpec) {
+        return null;
+      }
+      return {
+        character,
+        characterClass,
+        characterSpec,
+      };
+    })
+    .filter(isNotNull);
+
+const upsertCharacter = (roster: Roster, character: Character): Roster => {
+  const nextCharacters = roster.characters.filter(
+    (prevCharacter) => prevCharacter.characterName !== character.characterName,
+  );
+  nextCharacters.push(character);
+  return {
+    ...roster,
+    characters: nextCharacters,
+  };
+};
+
+const deleteCharacter = (
+  roster: Roster,
+  characterName: Character[`characterName`],
+): Roster => ({
+  ...roster,
+  groups: roster.groups.map((prevCharacterName) =>
+    prevCharacterName === characterName ? null : prevCharacterName,
+  ),
+  characters: roster.characters.filter(
+    (prevCharacter) => prevCharacter.characterName !== characterName,
+  ),
+});
+
+const createEmptyGroups = (): Groups =>
+  new Array(NUM_GROUPS * GROUP_SIZE).fill(null);
 
 const createFakeRoster = (seed: number): Roster => {
   const chance = new Chance(seed);
@@ -328,21 +441,15 @@ const createFakeRoster = (seed: number): Roster => {
   };
   for (let k = 0; k < numCharacters; k++) {
     const characterName = pickCharacterName();
-    const characterClass = chance.pickone(classes);
-    const characterSpec = chance.pickone(characterClass.specs);
+    const characterClass = chance.pickone(characterClasses);
+    const characterSpec = chance.pickone(characterClass.characterSpecs);
     characters.push({
       characterName,
-      className: characterClass.className,
-      specName: characterSpec.specName,
+      characterClassName: characterClass.characterClassName,
+      characterSpecName: characterSpec.characterSpecName,
     });
   }
-  const groups: Roster[`groups`] = [
-    padGroup([]),
-    padGroup([]),
-    padGroup([]),
-    padGroup([]),
-    padGroup([]),
-  ];
+  const groups = createEmptyGroups();
   return characters.reduce<Roster>(
     (roster, character) =>
       changeCharacterIsEnrolled(roster, character.characterName, chance.bool()),
@@ -350,231 +457,92 @@ const createFakeRoster = (seed: number): Roster => {
   );
 };
 
-const findClass = (className: Class[`className`]): Class | null =>
-  classes.find((c) => c.className === className) ?? null;
-
-const findSpec = (
-  { specs }: Class,
-  specName: Spec[`specName`],
-): Class[`specs`][number] | null =>
-  specs.find((spec) => spec.specName === specName) ?? null;
-
-const sortCharacters = (a: Character, b: Character): number =>
-  a.className !== b.className
-    ? a.className.localeCompare(b.className)
-    : a.specName !== b.specName
-    ? a.specName.localeCompare(b.specName)
-    : a.characterName.localeCompare(b.characterName);
-
-const findCharacter = (
-  roster: Roster,
-  characterName: Character[`characterName`],
-): Character | null =>
-  roster.characters.find(
-    (character) => character.characterName === characterName,
-  ) ?? null;
-
-const zipCharacterClass = (
-  roster: Roster,
-): {
-  readonly character: Character;
-  readonly characterClass: Class;
-  readonly characterSpec: Spec;
-}[] =>
-  roster.characters
-    .map((character) => {
-      const characterClass = findClass(character.className);
-      if (!characterClass) {
-        return null;
-      }
-      const characterSpec = findSpec(characterClass, character.specName);
-      if (!characterSpec) {
-        return null;
-      }
-      return {
-        character,
-        characterClass,
-        characterSpec,
-      };
-    })
-    .filter(isNotNull);
-
-const padGroup = (group: Group): Group => {
-  if (group.length === 5) {
-    return group;
-  }
-  if (group.length > 5) {
-    return group.slice(0, 5);
-  }
-  const nextGroup = [...group];
-  while (nextGroup.length < 5) {
-    nextGroup.push(null);
-  }
-  return nextGroup;
-};
-
-type WowheadPart = {
-  readonly classSpecId: Class[`specs`][number][`wowheadId`];
-  readonly characterName: Character[`characterName`];
-};
-
-const EMPTY_WOWHEAD_PART: WowheadPart = {
-  classSpecId: `0`,
-  characterName: ``,
-};
+const EMPTY_CHARACTER_SPEC_WOWHEAD_ID = `0`;
 
 const getWowheadRaidcompHref = (roster: Roster): string => {
-  const aggreg = roster.groups.map(padGroup).flatMap((group) =>
-    group.map((characterName): WowheadPart => {
-      if (!characterName) {
-        return EMPTY_WOWHEAD_PART;
-      }
-      const character = findCharacter(roster, characterName);
-      if (!character) {
-        return EMPTY_WOWHEAD_PART;
-      }
-      const characterClass = findClass(character.className);
-      if (!characterClass) {
-        return EMPTY_WOWHEAD_PART;
-      }
-      const classSpec = findSpec(characterClass, character.specName);
-      if (!classSpec) {
-        return EMPTY_WOWHEAD_PART;
-      }
-      return {
-        classSpecId: classSpec.wowheadId,
-        characterName,
-      };
-    }),
-  );
-  const classSpecAggreg = aggreg.map(({ classSpecId }) => classSpecId).join(``);
-  const characterNameAggreg = aggreg
-    .map(({ characterName }) => encodeURIComponent(characterName))
+  const characterSpecs = roster.groups
+    .map((characterName): string => {
+      const character = characterName
+        ? findCharacter(roster, characterName)
+        : null;
+      const characterClass = character
+        ? findCharacterClass(character.characterClassName)
+        : null;
+      const characterSpec =
+        character && characterClass
+          ? findCharacterSpec(characterClass, character.characterSpecName)
+          : null;
+      return characterSpec?.wowheadId ?? EMPTY_CHARACTER_SPEC_WOWHEAD_ID;
+    })
+    .join(``);
+  const characterNames = roster.groups
+    .map((characterName) => characterName ?? ``)
     .join(`;`);
-  const hash = `0${classSpecAggreg};${characterNameAggreg}`;
+  const hash = `0${characterSpecs};${characterNames}`;
   return `https://tbc.wowhead.com/raid-composition#${hash}`;
 };
 
-const cloneGroup = (group: Group): Group => [...group];
-const cloneGroups = (groups: Groups): Groups => groups.map(cloneGroup);
-
-const deduplicate = (groups: Groups, characterName: string): Groups => {
-  const nextGroups = cloneGroups(groups);
-  let prevOccurence: null | [groupIndex: number, characterIndex: number] = null;
-  for (let groupIndex = 0; groupIndex < nextGroups.length; groupIndex++) {
-    const group = nextGroups[groupIndex];
-    for (
-      let characterIndex = 0;
-      characterIndex < group.length;
-      characterIndex++
-    ) {
-      if (group[characterIndex] === characterName) {
-        if (prevOccurence) {
-          nextGroups[prevOccurence[0]][prevOccurence[1]] = null;
-        }
-        prevOccurence = [groupIndex, characterIndex];
-      }
-    }
-  }
-  return nextGroups;
-};
-
 const parseWowheadUrl = (roster: Roster, href: string): Roster => {
-  const url = new URL(href);
-  if (url.pathname !== `/raid-composition`) {
+  if (!href.startsWith(`https://tbc.wowhead.com/raid-composition#0`)) {
     return roster;
   }
-  const hash = url.hash.slice(1);
-  const [, ...characterNames] = hash.split(`;`);
-  const groups: Groups = [];
-  let currentGroup = -1;
-  for (let k = 0; k < characterNames.length; k++) {
-    if (k % 5 === 0) {
-      groups.push([]);
-      currentGroup++;
-    }
-    groups[currentGroup].push(
-      findCharacter(roster, characterNames[k])?.characterName ?? null,
-    );
-  }
-  return {
-    ...roster,
-    groups: characterNames.reduce<Groups>(
-      (groups, characterName) => deduplicate(groups, characterName),
-      groups.map(padGroup),
-    ),
-  };
-};
-
-const updateCharacter = (
-  roster: Roster,
-  prevCharacter: null | Character,
-  nextCharacter: null | Character,
-): Roster => {
-  if (nextCharacter === null) {
-    return {
-      ...roster,
-      characters: roster.characters.filter(
-        (character) => character.characterName !== prevCharacter?.characterName,
-      ),
-      groups: roster.groups.map((group) =>
-        group.map((characterName) =>
-          characterName === prevCharacter?.characterName ? null : characterName,
+  const url = new URL(href);
+  const [characterSpecs, ...characterNames] = url.hash
+    .slice(`#0`.length)
+    .split(`;`);
+  const characters = createEmptyGroups().map(
+    (_, groupIndex): Character | null => {
+      const characterClassSpec = findCharacterClassSpecByWowheadId(
+        characterSpecs.charAt(groupIndex),
+      );
+      if (!characterClassSpec) {
+        return null;
+      }
+      const characterName = characterNames[groupIndex];
+      return {
+        characterName,
+        characterClassName:
+          characterClassSpec.characterClass.characterClassName,
+        characterSpecName: characterClassSpec.characterSpec.characterSpecName,
+      };
+    },
+  );
+  return characters.reduce<Roster>(
+    (roster, character, groupIndex) => {
+      if (!character) {
+        return roster;
+      }
+      return enrollCharacter(
+        disenrollCharacter(
+          upsertCharacter(roster, character),
+          character.characterName,
         ),
-      ),
-    };
-  }
-  if (prevCharacter === null) {
-    return {
-      ...roster,
-      characters: [...roster.characters, nextCharacter],
-    };
-  }
-  return {
-    ...roster,
-    characters: roster.characters.map((character) =>
-      character.characterName === prevCharacter.characterName
-        ? nextCharacter
-        : character,
-    ),
-    groups: roster.groups.map((group) =>
-      group.map((characterName) =>
-        characterName === prevCharacter.characterName
-          ? nextCharacter.characterName
-          : characterName,
-      ),
-    ),
-  };
+        character.characterName,
+        groupIndex,
+      );
+    },
+    { characters: roster.characters, groups: createEmptyGroups() },
+  );
 };
 
 const isCharacterEnrolled = (
   roster: Roster,
   characterName: Character[`characterName`],
-): boolean => roster.groups.some((group) => group.includes(characterName));
+): boolean => roster.groups.includes(characterName);
 
 const enrollCharacter = (
   roster: Roster,
   characterName: Character[`characterName`],
+  groupIndex = roster.groups.indexOf(null),
 ): Roster => {
   if (isCharacterEnrolled(roster, characterName)) {
     return roster;
   }
-  const nextGroups = roster.groups.map((group) => [...group]);
-  for (const group of nextGroups) {
-    for (let k = 0; k < 5; k++) {
-      if (group[k] === null) {
-        group[k] = characterName;
-        return {
-          ...roster,
-          groups: nextGroups,
-        };
-      }
-    }
-  }
-  nextGroups.push([characterName, null, null, null, null]);
   return {
     ...roster,
-    groups: nextGroups,
+    groups: roster.groups.map((prevCharacterName, prevGroupIndex) =>
+      prevGroupIndex === groupIndex ? characterName : prevCharacterName,
+    ),
   };
 };
 
@@ -587,10 +555,8 @@ const disenrollCharacter = (
   }
   return {
     ...roster,
-    groups: roster.groups.map((group) =>
-      group.map((prevCharacterName) =>
-        prevCharacterName === characterName ? null : prevCharacterName,
-      ),
+    groups: roster.groups.map((prevCharacterName) =>
+      prevCharacterName === characterName ? null : prevCharacterName,
     ),
   };
 };
@@ -604,15 +570,15 @@ const changeCharacterIsEnrolled = (
     ? enrollCharacter(roster, characterName)
     : disenrollCharacter(roster, characterName);
 
-const SpecIcon: FunctionComponent<
+const CharacterSpecIcon: FunctionComponent<
   {
-    readonly spec: Spec;
+    readonly characterSpec: CharacterSpec;
   } & FlexProps
-> = ({ spec, ...flexProps }) => (
+> = ({ characterSpec, ...flexProps }) => (
   <Flex alignItems="center" justifyContent="center" {...flexProps}>
     <img
-      src={spec.iconHref}
-      alt={spec.specName}
+      src={characterSpec.iconHref}
+      alt={characterSpec.characterSpecName}
       style={{ width: `100%`, height: `100%` }}
     />
   </Flex>
@@ -623,9 +589,11 @@ const CharacterInput: FunctionComponent<{
   readonly onChangeCharacter: (character: Character) => void;
   readonly onSubmit: () => void;
 }> = ({ character, onChangeCharacter, onSubmit }) => {
-  const characterClass = findClass(character.className) ?? classes[0];
+  const characterClass =
+    findCharacterClass(character.characterClassName) ?? characterClasses[0];
   const characterSpec =
-    findSpec(characterClass, character.specName) ?? characterClass.specs[0];
+    findCharacterSpec(characterClass, character.characterSpecName) ??
+    characterClass.characterSpecs[0];
   return (
     <HStack
       w="100%"
@@ -641,8 +609,8 @@ const CharacterInput: FunctionComponent<{
       }}
       flexWrap="wrap"
     >
-      <SpecIcon
-        spec={characterSpec}
+      <CharacterSpecIcon
+        characterSpec={characterSpec}
         borderColor={characterClass.htmlColor}
         borderWidth={3}
         w={6}
@@ -662,34 +630,36 @@ const CharacterInput: FunctionComponent<{
       <Select
         w={32}
         size="sm"
-        value={characterClass.className}
-        onChange={({ target: { value: className } }) => {
-          const nextClass = findClass(className) ?? classes[0];
+        value={characterClass.characterClassName}
+        onChange={({ target: { value: characterClassName } }) => {
+          const nextClass =
+            findCharacterClass(characterClassName) ?? characterClasses[0];
           const nextSpec =
-            findSpec(nextClass, character.specName) ?? nextClass.specs[0];
+            findCharacterSpec(nextClass, character.characterSpecName) ??
+            nextClass.characterSpecs[0];
           onChangeCharacter({
             ...character,
-            className: nextClass.className,
-            specName: nextSpec.specName,
+            characterClassName: nextClass.characterClassName,
+            characterSpecName: nextSpec.characterSpecName,
           });
         }}
       >
-        {classes.map(({ className }) => (
-          <option key={className} value={className}>
-            {className}
+        {characterClasses.map(({ characterClassName }) => (
+          <option key={characterClassName} value={characterClassName}>
+            {characterClassName}
           </option>
         ))}
       </Select>
       <Select
         size="sm"
         w={32}
-        value={characterSpec.specName}
-        onChange={({ target: { value: specName } }) =>
-          onChangeCharacter({ ...character, specName })
+        value={characterSpec.characterSpecName}
+        onChange={({ target: { value: characterSpecName } }) =>
+          onChangeCharacter({ ...character, characterSpecName })
         }
       >
-        {characterClass.specs.map(({ specName }) => (
-          <option key={specName}>{specName}</option>
+        {characterClass.characterSpecs.map(({ characterSpecName }) => (
+          <option key={characterSpecName}>{characterSpecName}</option>
         ))}
       </Select>
       <Button size="sm" type="submit">
@@ -702,8 +672,8 @@ const CharacterInput: FunctionComponent<{
 const CharacterView: FunctionComponent<
   {
     readonly character: Character;
-    readonly characterClass: Class;
-    readonly characterSpec: Spec;
+    readonly characterClass: CharacterClass;
+    readonly characterSpec: CharacterSpec;
   } & FlexProps
 > = ({ character, characterClass, characterSpec, ...flexProps }) => (
   <Flex
@@ -713,8 +683,8 @@ const CharacterView: FunctionComponent<
     px={1}
     {...flexProps}
   >
-    <SpecIcon spec={characterSpec} w={5} h={5} />
-    <Text isTruncated minW={0} flex={1} ml={1}>
+    <CharacterSpecIcon characterSpec={characterSpec} w={5} h={5} />
+    <Text isTruncated minW={0} flex={1} pl={1}>
       {character.characterName}
     </Text>
   </Flex>
@@ -722,21 +692,23 @@ const CharacterView: FunctionComponent<
 
 const DEFAULT_NEW_CHARACTER: Character = {
   characterName: ``,
-  className: classes[0].className,
-  specName: classes[0].specs[0].specName,
+  characterClassName: characterClasses[0].characterClassName,
+  characterSpecName: characterClasses[0].characterSpecs[0].characterSpecName,
 };
 
 const RosterView: FunctionComponent<{
   readonly roster: Roster;
-  readonly onAddCharacter: (character: Character) => void;
-  readonly onDeleteCharacter: (character: Character) => void;
+  readonly onUpsertCharacter: (character: Character) => void;
+  readonly onDeleteCharacter: (
+    characterName: Character[`characterName`],
+  ) => void;
   readonly onChangeCharacterIsEnrolled: (
     character: Character,
     isEnrolled: boolean,
   ) => void;
 }> = ({
   roster,
-  onAddCharacter,
+  onUpsertCharacter,
   onDeleteCharacter,
   onChangeCharacterIsEnrolled,
 }) => {
@@ -752,9 +724,9 @@ const RosterView: FunctionComponent<{
       <Heading as="h2" fontSize="2xl">
         Roster ({isEnrolledCount}/{totalCount})
       </Heading>
-      <HStack alignItems="flex-start" pl={6} flexWrap="wrap">
-        {Object.values(Spec.shape.role.Enum).map((role) => {
-          const characters = zipCharacterClass(roster)
+      <Flex alignItems="flex-start" pl={6} flexWrap="wrap">
+        {Object.values(CharacterSpec.shape.role.Enum).map((role) => {
+          const characters = zipCharacters(roster)
             .filter(({ characterSpec }) => characterSpec.role === role)
             .sort((a, b) => sortCharacters(a.character, b.character));
           const totalCount = characters.length;
@@ -763,7 +735,7 @@ const RosterView: FunctionComponent<{
               isCharacterEnrolled(roster, characterName),
           ).length;
           return (
-            <Flex key={role} flexDirection="column" w={60}>
+            <Flex key={role} flexDirection="column" w={60} mx={2} mt={1}>
               <Heading as="h3" fontSize="lg" mt={2} mb={3}>
                 {role} ({isEnrolledCount}/{totalCount})
               </Heading>
@@ -811,7 +783,7 @@ const RosterView: FunctionComponent<{
                                 `Really delete ${character.characterName} forever?`,
                               )
                             ) {
-                              onDeleteCharacter(character);
+                              onDeleteCharacter(character.characterName);
                             }
                           }}
                         />
@@ -823,7 +795,7 @@ const RosterView: FunctionComponent<{
             </Flex>
           );
         })}
-      </HStack>
+      </Flex>
       <VStack alignItems="flex-start" pl={6}>
         <Heading as="h3" fontSize="lg">
           Add new character
@@ -832,7 +804,7 @@ const RosterView: FunctionComponent<{
           character={newCharacter}
           onChangeCharacter={setNewCharacter}
           onSubmit={() => {
-            onAddCharacter(newCharacter);
+            onUpsertCharacter(newCharacter);
             setNewCharacter(DEFAULT_NEW_CHARACTER);
           }}
         />
@@ -845,23 +817,23 @@ const GroupView: FunctionComponent<{
   readonly roster: Roster;
   readonly groupIndex: number;
 }> = ({ roster, groupIndex }) => {
-  const group = roster.groups[groupIndex];
-  if (!group) {
-    return null;
-  }
+  const groupCharacters = roster.groups.slice(
+    GROUP_SIZE * groupIndex,
+    GROUP_SIZE * (groupIndex + 1),
+  );
   return (
-    <VStack w={40} alignItems="stretch">
+    <VStack w={40} alignItems="stretch" mx={2} mt={1}>
       <Heading as="h3" fontSize="lg">{`Group ${groupIndex + 1}`}</Heading>
-      {group.map((characterName, key) => {
+      {groupCharacters.map((characterName, key) => {
         const character = characterName
           ? findCharacter(roster, characterName)
           : null;
         const characterClass = character
-          ? findClass(character.className)
+          ? findCharacterClass(character.characterClassName)
           : null;
         const characterSpec =
           character && characterClass
-            ? findSpec(characterClass, character.specName)
+            ? findCharacterSpec(characterClass, character.characterSpecName)
             : null;
         if (!character || !characterClass || !characterSpec) {
           return (
@@ -893,26 +865,37 @@ const GroupView: FunctionComponent<{
 
 const GroupsView: FunctionComponent<{
   readonly roster: Roster;
-  readonly onUpdateRoster: (roster: Roster) => void;
+  readonly onUpdateRoster: (next: (roster: Roster) => Roster) => void;
 }> = ({ roster, onUpdateRoster }) => {
   const wowheadUrl = useMemo(() => getWowheadRaidcompHref(roster), [roster]);
+
   const ertString = useMemo(
     () => createErtRaidgroupsImportString(roster.groups),
     [roster.groups],
   );
+
+  const lastCharacterIndex = roster.groups
+    .map((characterName) => (characterName ? true : false))
+    .lastIndexOf(true);
+
+  const lastNonEmptyGroupIndex = Math.ceil(
+    (lastCharacterIndex + 1) / GROUP_SIZE,
+  );
+  const numDisplayedGroups = Math.max(5, lastNonEmptyGroupIndex);
+
   return (
     <VStack w="100%" alignItems="flex-start" spacing={4}>
       <Heading as="h2" fontSize="2xl">
         Groups
       </Heading>
-      <HStack alignItems="flex-start" pl={6} flexWrap="wrap">
-        {roster.groups.map((_group, groupIndex) => (
+      <Flex alignItems="flex-start" pl={6} flexWrap="wrap">
+        {new Array(numDisplayedGroups).fill(null).map((_, groupIndex) => (
           <GroupView key={groupIndex} roster={roster} groupIndex={groupIndex} />
         ))}
-      </HStack>
+      </Flex>
       <VStack alignItems="flex-start" pl={6}>
-        {Object.values(Spec.shape.role.Enum).map((role) => {
-          const characters = zipCharacterClass(roster)
+        {Object.values(CharacterSpec.shape.role.Enum).map((role) => {
+          const characters = zipCharacters(roster)
             .filter(({ characterSpec }) => characterSpec.role === role)
             .sort((a, b) => sortCharacters(a.character, b.character));
           const isEnrolledCount = characters.filter(
@@ -941,6 +924,22 @@ const GroupsView: FunctionComponent<{
           </Text>
         </HStack>
       </VStack>
+      <HStack pl={6}>
+        <Button
+          size="sm"
+          colorScheme="red"
+          onClick={() => {
+            if (confirm(`Do you really want to clear all groups?`)) {
+              onUpdateRoster((roster) => ({
+                ...roster,
+                groups: createEmptyGroups(),
+              }));
+            }
+          }}
+        >
+          Clear groups
+        </Button>
+      </HStack>
       <VStack alignItems="flex-start" pl={6}>
         <Heading as="h3" fontSize="md">
           Import from / export to Wowhead
@@ -952,7 +951,7 @@ const GroupsView: FunctionComponent<{
             type="text"
             value={wowheadUrl}
             onChange={({ target: { value: wowheadUrl } }) =>
-              onUpdateRoster(parseWowheadUrl(roster, wowheadUrl))
+              onUpdateRoster(() => parseWowheadUrl(roster, wowheadUrl))
             }
           />
           <Flex
@@ -975,6 +974,7 @@ const GroupsView: FunctionComponent<{
           w={96}
           h={64}
           value={ertString}
+          onChange={() => null}
           resize="none"
         />
       </VStack>
@@ -982,49 +982,15 @@ const GroupsView: FunctionComponent<{
   );
 };
 
-const EMPTY_GROUP = (): Group => [null, null, null, null, null];
-
 const DEFAULT_ROSTER: Roster = {
   characters: [],
-  groups: [
-    EMPTY_GROUP(),
-    EMPTY_GROUP(),
-    EMPTY_GROUP(),
-    EMPTY_GROUP(),
-    EMPTY_GROUP(),
-  ],
+  groups: createEmptyGroups(),
 };
 
-const TbcRaidcompPage: FunctionComponent = () => {
-  const [roster, setRoster] = useState<Roster>(DEFAULT_ROSTER);
-
-  const initialJsonUrl = useAsync(async () => {
-    if (window.location.hash) {
-      return jsonUrlCodec.decompress(window.location.hash).then(Roster.parse);
-    }
-    return null;
-  }, []);
-
-  useEffect(() => {
-    AsyncResult.match(initialJsonUrl, {
-      pending: () => null,
-      rejected: () => null,
-      resolved: (roster) => (roster ? setRoster(roster) : null),
-    });
-  }, [initialJsonUrl]);
-
-  const jsonUrl = useAsync(() => jsonUrlCodec.compress(roster), [roster]);
-
-  useEffect(() => {
-    AsyncResult.match(jsonUrl, {
-      pending: () => null,
-      rejected: () => null,
-      resolved: (jsonUrl) => {
-        window.location.hash = jsonUrl;
-      },
-    });
-  }, [jsonUrl]);
-
+const TbcRaidcomp: FunctionComponent<{
+  readonly roster: Roster;
+  readonly setRoster: (next: (roster: Roster) => Roster) => void;
+}> = ({ roster, setRoster }) => {
   const onClickDownload = useCallback(() => {
     const link = document.createElement(`a`);
     link.download = `tbc-raidcomp.json`;
@@ -1036,69 +1002,130 @@ const TbcRaidcompPage: FunctionComponent = () => {
   }, [roster]);
 
   return (
+    <VStack alignItems="flex-start" w="100%">
+      <GroupsView roster={roster} onUpdateRoster={setRoster} />
+      <RosterView
+        roster={roster}
+        onUpsertCharacter={(character) =>
+          setRoster((roster) => upsertCharacter(roster, character))
+        }
+        onDeleteCharacter={(characterName) =>
+          setRoster((roster) => deleteCharacter(roster, characterName))
+        }
+        onChangeCharacterIsEnrolled={(character, isEnrolled) =>
+          setRoster((roster) =>
+            changeCharacterIsEnrolled(
+              roster,
+              character.characterName,
+              isEnrolled,
+            ),
+          )
+        }
+      />
+      <HStack>
+        <Button size="sm" onClick={onClickDownload}>
+          Download as JSON
+        </Button>
+        <Button
+          size="sm"
+          colorScheme="red"
+          onClick={() => {
+            if (
+              confirm(
+                `Do you really want to generate fake data? This will overwrite your current roster.`,
+              )
+            ) {
+              setRoster(() => createFakeRoster(Date.now()));
+            }
+          }}
+        >
+          Generate fake data
+        </Button>
+        <Button
+          size="sm"
+          colorScheme="red"
+          onClick={() => {
+            if (
+              confirm(
+                `Do you really want to delete all data? This will overwrite your current roster.`,
+              )
+            ) {
+              setRoster(() => DEFAULT_ROSTER);
+            }
+          }}
+        >
+          Clear all data
+        </Button>
+      </HStack>
+    </VStack>
+  );
+};
+
+const TbcRaidcompPage: FunctionComponent = () => {
+  const [localRoster, setLocalRoster] = useState<null | Roster>(null);
+
+  const hashJsonUrl = useLocationHash();
+
+  const hashRoster = useAsync(async () => {
+    if (!hashJsonUrl) {
+      return DEFAULT_ROSTER;
+    }
+    return await jsonUrlCodec
+      .decompress(hashJsonUrl)
+      .then(Roster.parse)
+      .catch(() => DEFAULT_ROSTER);
+  }, [hashJsonUrl]);
+
+  useEffect(() => {
+    setLocalRoster((localRoster) =>
+      AsyncResult.match(hashRoster, {
+        pending: () => localRoster,
+        rejected: () => DEFAULT_ROSTER,
+        resolved: (hashRoster) =>
+          deepEqual(localRoster, hashRoster) ? localRoster : hashRoster,
+      }),
+    );
+  }, [hashRoster]);
+
+  const localJsonUrl = useAsync(
+    async () => (localRoster ? await jsonUrlCodec.compress(localRoster) : null),
+    [localRoster],
+  );
+
+  useEffect(() => {
+    AsyncResult.match(localJsonUrl, {
+      pending: () => null,
+      rejected: () => null,
+      resolved: (localJsonUrl) => {
+        if (localJsonUrl && localJsonUrl !== hashJsonUrl) {
+          const nextUrl = new URL(window.location.href);
+          nextUrl.hash = localJsonUrl;
+          history.pushState(null, pageTitle, nextUrl.href);
+        }
+      },
+    });
+  }, [localJsonUrl]);
+
+  return (
     <Fragment>
       <Head>
         <script src="/vendor/fengari-web.js" />
       </Head>
       <Container p={4} maxW="container.xl">
         <Heading as="h1" mb={6} textAlign="center">
-          TBC Raidcomp
+          {pageTitle}
         </Heading>
-        {AsyncResult.is.pending(initialJsonUrl) ? (
-          <Spinner />
+        {localRoster ? (
+          <TbcRaidcomp
+            roster={localRoster}
+            setRoster={(next) =>
+              setLocalRoster((localRoster) =>
+                localRoster ? next(localRoster) : localRoster,
+              )
+            }
+          />
         ) : (
-          <Fragment>
-            {AsyncResult.is.rejected(initialJsonUrl) && (
-              <Alert>
-                {JSON.stringify(AsyncResult.to.rejectedError(initialJsonUrl))}
-              </Alert>
-            )}
-            <VStack alignItems="flex-start" w="100%">
-              <RosterView
-                roster={roster}
-                onAddCharacter={(character) =>
-                  setRoster((roster) =>
-                    updateCharacter(roster, null, character),
-                  )
-                }
-                onDeleteCharacter={(characterName) =>
-                  setRoster((roster) =>
-                    updateCharacter(roster, characterName, null),
-                  )
-                }
-                onChangeCharacterIsEnrolled={(character, isEnrolled) =>
-                  setRoster((roster) =>
-                    changeCharacterIsEnrolled(
-                      roster,
-                      character.characterName,
-                      isEnrolled,
-                    ),
-                  )
-                }
-              />
-              <GroupsView roster={roster} onUpdateRoster={setRoster} />
-              <HStack>
-                <Button size="sm" onClick={onClickDownload}>
-                  Download as JSON
-                </Button>
-                <Button
-                  size="sm"
-                  colorScheme="red"
-                  onClick={() => {
-                    if (
-                      confirm(
-                        `Do you really want to generate fake data? This will overwrite your current roster.`,
-                      )
-                    ) {
-                      setRoster(createFakeRoster(Date.now()));
-                    }
-                  }}
-                >
-                  Generate fake data
-                </Button>
-              </HStack>
-            </VStack>
-          </Fragment>
+          <Spinner />
         )}
       </Container>
     </Fragment>
