@@ -324,6 +324,7 @@ const characterClasses: CharacterClass[] = [
     ],
   },
 ];
+
 const findCharacterClass = (
   characterClassName: CharacterClass[`characterClassName`],
 ): CharacterClass | null =>
@@ -487,7 +488,7 @@ const parseWowheadUrl = (roster: Roster, href: string): Roster => {
     return roster;
   }
   const url = new URL(href);
-  const [characterSpecs, ...characterNames] = url.hash
+  const [characterSpecs, ...characterNames] = decodeURIComponent(url.hash)
     .slice(`#0`.length)
     .split(`;`);
   const characters = createEmptyGroups().map(
@@ -950,6 +951,7 @@ const GroupsView: FunctionComponent<{
             w={96}
             type="text"
             value={wowheadUrl}
+            onFocus={({ target }) => target.select()}
             onChange={({ target: { value: wowheadUrl } }) =>
               onUpdateRoster(() => parseWowheadUrl(roster, wowheadUrl))
             }
@@ -974,6 +976,7 @@ const GroupsView: FunctionComponent<{
           w={96}
           h={64}
           value={ertString}
+          onFocus={({ target }) => target.select()}
           onChange={() => null}
           resize="none"
         />
