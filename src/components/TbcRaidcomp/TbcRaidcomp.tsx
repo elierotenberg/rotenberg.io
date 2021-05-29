@@ -916,6 +916,7 @@ const GroupView: FunctionComponent<{
   readonly onDragEnd: () => void;
   readonly onDrop: (dropGroupIndex: number) => void;
 }> = ({ roster, groupNumber, onDragStart, onDragEnd, onDrop }) => {
+  const [dragOver, setDragOver] = useState<null | number>(null);
   const startGroupIndex = GROUP_SIZE * groupNumber;
   const groupCharacters = roster.groups.slice(
     startGroupIndex,
@@ -947,10 +948,17 @@ const GroupView: FunctionComponent<{
           event.preventDefault();
           event.dataTransfer.dropEffect = `move`;
         };
+        const onDragEnter = (): void => {
+          setDragOver(groupIndex);
+        };
+        const onDragExit = (): void => {
+          setDragOver(null);
+        };
         const onDropCurrent = (
           event: React.DragEvent<HTMLDivElement>,
         ): void => {
           event.preventDefault();
+          setDragOver(null);
           onDrop(groupIndex);
         };
         if (!character || !characterClass || !characterSpec) {
@@ -958,21 +966,17 @@ const GroupView: FunctionComponent<{
             <Flex
               key={groupIndexOffset}
               h={7}
-              draggable
               onDragStart={onDragStartCurrent}
               onDragEnd={onDragEnd}
               onDragOver={onDragOver}
+              onDragEnter={onDragEnter}
+              onDragExit={onDragExit}
               onDrop={onDropCurrent}
-            >
-              <Text
-                fontStyle="italic"
-                textAlign="center"
-                w="100%"
-                textColor="blackAlpha.600"
-              >
-                (Empty)
-              </Text>
-            </Flex>
+              bgColor={
+                dragOver === groupIndex ? `blackAlpha.300` : `blackAlpha.50`
+              }
+              w="100%"
+            />
           );
         }
         return (
@@ -983,10 +987,14 @@ const GroupView: FunctionComponent<{
             characterSpec={characterSpec}
             h={7}
             draggable
+            cursor="grab"
             onDragStart={onDragStartCurrent}
             onDragEnd={onDragEnd}
             onDragOver={onDragOver}
+            onDragEnter={onDragEnter}
+            onDragExit={onDragExit}
             onDrop={onDropCurrent}
+            filter={dragOver === groupIndex ? `brightness(70%)` : undefined}
           />
         );
       })}
@@ -1008,7 +1016,7 @@ const GroupsView: FunctionComponent<{
   const onDragEnd = useCallback(
     () =>
       onUpdateRoster((roster) => {
-        if (!dragGroupIndex) {
+        if (dragGroupIndex === null) {
           return roster;
         }
         const characterName = roster.groups[dragGroupIndex];
@@ -1022,7 +1030,7 @@ const GroupsView: FunctionComponent<{
 
   const onDrop = useCallback(
     (dropGroupIndex: number) => {
-      if (!dragGroupIndex) {
+      if (dragGroupIndex === null) {
         return;
       }
       onUpdateRoster((roster) => ({
