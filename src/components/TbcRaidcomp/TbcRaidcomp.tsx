@@ -458,6 +458,101 @@ const createFakeRoster = (seed: number): Roster => {
   );
 };
 
+type SerializeRoster = (roster: Roster) => Promise<string>;
+type ParseRoster = (input: string) => Promise<Roster>;
+
+const SerializedRosterV0 = Roster;
+
+type SerializedRosterV0 = z.infer<typeof SerializedRosterV1>;
+
+const serializeRosterV0: SerializeRoster = (roster) =>
+  jsonUrlCodec.compress(roster);
+
+void serializeRosterV0;
+
+const parseRosterV0: ParseRoster = (input) =>
+  jsonUrlCodec.decompress(input).then(SerializedRosterV0.parse);
+
+const SerializedRosterV1 = z.tuple([
+  z.array(z.tuple([z.string(), z.string()])), // [characterName, wowheadId]
+  z
+    .array(
+      z.union([
+        z.null(),
+        z
+          .number()
+          .refine((characterIndex) => Number.isSafeInteger(characterIndex)),
+      ]),
+    )
+    .length(40),
+]);
+
+type SerializedRosterV1 = z.infer<typeof SerializedRosterV1>;
+
+const serializeRosterV1: SerializeRoster = async (roster) => {
+  const serializedRosterV1: SerializedRosterV1 = [
+    roster.characters
+      .map((character): null | [string, string] => {
+        const characterClass = findCharacterClass(character.characterClassName);
+        const characterSpec = characterClass
+          ? findCharacterSpec(characterClass, character.characterSpecName)
+          : null;
+        if (!characterSpec) {
+          return null;
+        }
+        return [character.characterName, characterSpec.wowheadId];
+      })
+      .filter(isNotNull),
+    roster.groups.map((characterName) =>
+      characterName
+        ? roster.characters.findIndex(
+            (character) => character.characterName === characterName,
+          ) ?? null
+        : null,
+    ),
+  ];
+  return await jsonUrlCodec.compress(serializedRosterV1);
+};
+
+const parseRosterV1 = async (input: string): Promise<Roster> => {
+  const [serializedCharacters, serializedGroups] = await jsonUrlCodec
+    .decompress(input)
+    .then(SerializedRosterV1.parse);
+  const characters = serializedCharacters.map(
+    ([characterName, wowheadId]): Character => {
+      const {
+        characterClass: { characterClassName },
+        characterSpec: { characterSpecName },
+      } = findCharacterClassSpecByWowheadId(wowheadId) ?? {
+        characterClass: characterClasses[0],
+        characterSpec: characterClasses[0].characterSpecs[0],
+      };
+      return {
+        characterName,
+        characterClassName,
+        characterSpecName,
+      };
+    },
+  );
+  const groups = serializedGroups.map((characterIndex) =>
+    characterIndex === null ? null : characters[characterIndex].characterName,
+  );
+  return {
+    characters,
+    groups,
+  };
+};
+
+const serializeRoster: SerializeRoster = async (roster) =>
+  `v1:${await serializeRosterV1(roster)}`;
+
+const parseRoster: ParseRoster = async (input) => {
+  if (input.startsWith(`v1:`)) {
+    return await parseRosterV1(input.slice(`v1:`.length));
+  }
+  return await parseRosterV0(input);
+};
+
 const EMPTY_CHARACTER_SPEC_WOWHEAD_ID = `0`;
 
 const getWowheadRaidcompHref = (roster: Roster): string => {
@@ -816,16 +911,20 @@ const RosterView: FunctionComponent<{
 
 const GroupView: FunctionComponent<{
   readonly roster: Roster;
-  readonly groupIndex: number;
-}> = ({ roster, groupIndex }) => {
+  readonly groupNumber: number;
+  readonly onDragStart: (dragGroupIndex: number) => void;
+  readonly onDragEnd: () => void;
+  readonly onDrop: (dropGroupIndex: number) => void;
+}> = ({ roster, groupNumber, onDragStart, onDragEnd, onDrop }) => {
+  const startGroupIndex = GROUP_SIZE * groupNumber;
   const groupCharacters = roster.groups.slice(
-    GROUP_SIZE * groupIndex,
-    GROUP_SIZE * (groupIndex + 1),
+    startGroupIndex,
+    startGroupIndex + GROUP_SIZE,
   );
   return (
     <VStack w={40} alignItems="stretch" mx={2} mt={1}>
-      <Heading as="h3" fontSize="lg">{`Group ${groupIndex + 1}`}</Heading>
-      {groupCharacters.map((characterName, key) => {
+      <Heading as="h3" fontSize="lg">{`Group ${groupNumber + 1}`}</Heading>
+      {groupCharacters.map((characterName, groupIndexOffset) => {
         const character = characterName
           ? findCharacter(roster, characterName)
           : null;
@@ -836,9 +935,35 @@ const GroupView: FunctionComponent<{
           character && characterClass
             ? findCharacterSpec(characterClass, character.characterSpecName)
             : null;
+        const groupIndex = startGroupIndex + groupIndexOffset;
+        const onDragStartCurrent = (
+          event: React.DragEvent<HTMLDivElement>,
+        ): void => {
+          event.dataTransfer.setData(`text/plain`, `${groupIndex}`);
+          event.dataTransfer.effectAllowed = `move`;
+          onDragStart(groupIndex);
+        };
+        const onDragOver = (event: React.DragEvent<HTMLDivElement>): void => {
+          event.preventDefault();
+          event.dataTransfer.dropEffect = `move`;
+        };
+        const onDropCurrent = (
+          event: React.DragEvent<HTMLDivElement>,
+        ): void => {
+          event.preventDefault();
+          onDrop(groupIndex);
+        };
         if (!character || !characterClass || !characterSpec) {
           return (
-            <Flex key={key} h={7}>
+            <Flex
+              key={groupIndexOffset}
+              h={7}
+              draggable
+              onDragStart={onDragStartCurrent}
+              onDragEnd={onDragEnd}
+              onDragOver={onDragOver}
+              onDrop={onDropCurrent}
+            >
               <Text
                 fontStyle="italic"
                 textAlign="center"
@@ -852,11 +977,16 @@ const GroupView: FunctionComponent<{
         }
         return (
           <CharacterView
-            key={key}
+            key={groupIndexOffset}
             character={character}
             characterClass={characterClass}
             characterSpec={characterSpec}
             h={7}
+            draggable
+            onDragStart={onDragStartCurrent}
+            onDragEnd={onDragEnd}
+            onDragOver={onDragOver}
+            onDrop={onDropCurrent}
           />
         );
       })}
@@ -868,6 +998,48 @@ const GroupsView: FunctionComponent<{
   readonly roster: Roster;
   readonly onUpdateRoster: (next: (roster: Roster) => Roster) => void;
 }> = ({ roster, onUpdateRoster }) => {
+  const [dragGroupIndex, setDragGroupIndex] = useState<null | number>(null);
+
+  const onDragStart = useCallback(
+    (dragGroupIndex) => setDragGroupIndex(dragGroupIndex),
+    [],
+  );
+
+  const onDragEnd = useCallback(
+    () =>
+      onUpdateRoster((roster) => {
+        if (!dragGroupIndex) {
+          return roster;
+        }
+        const characterName = roster.groups[dragGroupIndex];
+        if (!characterName) {
+          return roster;
+        }
+        return disenrollCharacter(roster, characterName);
+      }),
+    [dragGroupIndex],
+  );
+
+  const onDrop = useCallback(
+    (dropGroupIndex: number) => {
+      if (!dragGroupIndex) {
+        return;
+      }
+      onUpdateRoster((roster) => ({
+        ...roster,
+        groups: roster.groups.map((characterName, groupIndex) =>
+          groupIndex === dragGroupIndex
+            ? roster.groups[dropGroupIndex]
+            : groupIndex === dropGroupIndex
+            ? roster.groups[dragGroupIndex]
+            : characterName,
+        ),
+      }));
+      setDragGroupIndex(null);
+    },
+    [dragGroupIndex, onUpdateRoster],
+  );
+
   const wowheadUrl = useMemo(() => getWowheadRaidcompHref(roster), [roster]);
 
   const ertString = useMemo(
@@ -875,23 +1047,21 @@ const GroupsView: FunctionComponent<{
     [roster.groups],
   );
 
-  const lastCharacterIndex = roster.groups
-    .map((characterName) => (characterName ? true : false))
-    .lastIndexOf(true);
-
-  const lastNonEmptyGroupIndex = Math.ceil(
-    (lastCharacterIndex + 1) / GROUP_SIZE,
-  );
-  const numDisplayedGroups = Math.max(5, lastNonEmptyGroupIndex);
-
   return (
     <VStack w="100%" alignItems="flex-start" spacing={4}>
       <Heading as="h2" fontSize="2xl">
         Groups
       </Heading>
       <Flex alignItems="flex-start" pl={6} flexWrap="wrap">
-        {new Array(numDisplayedGroups).fill(null).map((_, groupIndex) => (
-          <GroupView key={groupIndex} roster={roster} groupIndex={groupIndex} />
+        {new Array(NUM_GROUPS).fill(null).map((_, groupNumber) => (
+          <GroupView
+            key={groupNumber}
+            roster={roster}
+            groupNumber={groupNumber}
+            onDragStart={onDragStart}
+            onDragEnd={onDragEnd}
+            onDrop={onDrop}
+          />
         ))}
       </Flex>
       <VStack alignItems="flex-start" pl={6}>
@@ -1067,17 +1237,14 @@ const TbcRaidcomp: FunctionComponent<{
 const TbcRaidcompPage: FunctionComponent = () => {
   const [localRoster, setLocalRoster] = useState<null | Roster>(null);
 
-  const hashJsonUrl = useLocationHash();
+  const hashSerializedRoster = useLocationHash();
 
   const hashRoster = useAsync(async () => {
-    if (!hashJsonUrl) {
+    if (!hashSerializedRoster) {
       return DEFAULT_ROSTER;
     }
-    return await jsonUrlCodec
-      .decompress(hashJsonUrl)
-      .then(Roster.parse)
-      .catch(() => DEFAULT_ROSTER);
-  }, [hashJsonUrl]);
+    return await parseRoster(hashSerializedRoster).catch(() => DEFAULT_ROSTER);
+  }, [hashSerializedRoster]);
 
   useEffect(() => {
     setLocalRoster((localRoster) =>
@@ -1090,24 +1257,27 @@ const TbcRaidcompPage: FunctionComponent = () => {
     );
   }, [hashRoster]);
 
-  const localJsonUrl = useAsync(
-    async () => (localRoster ? await jsonUrlCodec.compress(localRoster) : null),
+  const localSerializedRoster = useAsync(
+    async () => (localRoster ? await serializeRoster(localRoster) : null),
     [localRoster],
   );
 
   useEffect(() => {
-    AsyncResult.match(localJsonUrl, {
+    AsyncResult.match(localSerializedRoster, {
       pending: () => null,
       rejected: () => null,
-      resolved: (localJsonUrl) => {
-        if (localJsonUrl && localJsonUrl !== hashJsonUrl) {
+      resolved: (localSerializedRoster) => {
+        if (
+          localSerializedRoster &&
+          localSerializedRoster !== hashSerializedRoster
+        ) {
           const nextUrl = new URL(window.location.href);
-          nextUrl.hash = localJsonUrl;
+          nextUrl.hash = localSerializedRoster;
           history.pushState(null, pageTitle, nextUrl.href);
         }
       },
     });
-  }, [localJsonUrl]);
+  }, [localSerializedRoster]);
 
   return (
     <Fragment>
