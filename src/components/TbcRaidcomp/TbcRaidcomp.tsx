@@ -223,7 +223,7 @@ const characterClasses: CharacterClass[] = [
         characterSpecName: `Shadow`,
         role: `Ranged`,
         iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_shadow_shadowwordpain.jpg`,
-        wowheadId: `n`,
+        wowheadId: `q`,
       },
     ],
   },
@@ -937,41 +937,31 @@ const GroupView: FunctionComponent<{
             ? findCharacterSpec(characterClass, character.characterSpecName)
             : null;
         const groupIndex = startGroupIndex + groupIndexOffset;
-        const onDragStartCurrent = (
-          event: React.DragEvent<HTMLDivElement>,
-        ): void => {
-          event.dataTransfer.setData(`text/plain`, `${groupIndex}`);
-          event.dataTransfer.effectAllowed = `move`;
-          onDragStart(groupIndex);
-        };
-        const onDragOver = (event: React.DragEvent<HTMLDivElement>): void => {
-          event.preventDefault();
-          event.dataTransfer.dropEffect = `move`;
-        };
-        const onDragEnter = (): void => {
-          setDragOver(groupIndex);
-        };
-        const onDragExit = (): void => {
-          setDragOver(null);
-        };
-        const onDropCurrent = (
-          event: React.DragEvent<HTMLDivElement>,
-        ): void => {
-          event.preventDefault();
-          setDragOver(null);
-          onDrop(groupIndex);
+        const draggableProps: FlexProps = {
+          onDrag: (event) => {
+            event.dataTransfer.setData(`text/plain`, `${groupIndex}`);
+            event.dataTransfer.effectAllowed = `move`;
+            onDragStart(groupIndex);
+          },
+          onDragEnd,
+          onDragOver: (event) => {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = `move`;
+          },
+          onDragEnter: () => setDragOver(groupIndex),
+          onDragExit: () => setDragOver(null),
+          onDrop: (event) => {
+            event.preventDefault();
+            setDragOver(null);
+            onDrop(groupIndex);
+          },
         };
         if (!character || !characterClass || !characterSpec) {
           return (
             <Flex
               key={groupIndexOffset}
               h={7}
-              onDragStart={onDragStartCurrent}
-              onDragEnd={onDragEnd}
-              onDragOver={onDragOver}
-              onDragEnter={onDragEnter}
-              onDragExit={onDragExit}
-              onDrop={onDropCurrent}
+              {...draggableProps}
               bgColor={
                 dragOver === groupIndex ? `blackAlpha.300` : `blackAlpha.50`
               }
@@ -987,13 +977,8 @@ const GroupView: FunctionComponent<{
             characterSpec={characterSpec}
             h={7}
             draggable
+            {...draggableProps}
             cursor="grab"
-            onDragStart={onDragStartCurrent}
-            onDragEnd={onDragEnd}
-            onDragOver={onDragOver}
-            onDragEnter={onDragEnter}
-            onDragExit={onDragExit}
-            onDrop={onDropCurrent}
             filter={dragOver === groupIndex ? `brightness(70%)` : undefined}
           />
         );
