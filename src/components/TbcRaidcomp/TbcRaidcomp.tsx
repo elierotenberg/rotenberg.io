@@ -323,6 +323,30 @@ const characterClasses: CharacterClass[] = [
       },
     ],
   },
+  {
+    characterClassName: `Death Knight`,
+    htmlColor: `#C41E3A`,
+    characterSpecs: [
+      {
+        characterSpecName: `Blood`,
+        role: `Tank`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/tiny/spell_deathknight_bloodpresence.gif`,
+        wowheadId: `K`,
+      },
+      {
+        characterSpecName: `Frost`,
+        role: `Melee`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/tiny/spell_deathknight_frostpresence.gif`,
+        wowheadId: `L`,
+      },
+      {
+        characterSpecName: `Unholy`,
+        role: `Melee`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/tiny/spell_deathknight_unholypresence.gif`,
+        wowheadId: `M`,
+      },
+    ],
+  },
 ];
 const findCharacterClass = (
   characterClassName: CharacterClass[`characterClassName`],
