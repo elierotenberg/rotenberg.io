@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const withBundleAnalyzer = require(`@next/bundle-analyzer`);
-const withMdx = require(`@next/mdx`);
-const remarkToc = require(`remark-toc`);
-const remarkSlug = require(`remark-slug`);
+import withBundleAnalyzer from "@next/bundle-analyzer";
+import withMdx from "@next/mdx";
+import remarkToc from "remark-toc";
+import remarkSlug from "remark-slug";
 
-module.exports = withMdx({
+export default withMdx({
   options: {
     remarkPlugins: [[remarkToc, { tight: true }], remarkSlug],
   },
@@ -12,9 +12,7 @@ module.exports = withMdx({
   withBundleAnalyzer({
     enabled: process.env.ANALYZE_BUNDLE === `1`,
   })({
-    future: {
-      webpack5: true,
-    },
+    reactStrictMode: true,
     webpack: (config) => {
       config.module.rules.push({
         test: /\.lua$/,

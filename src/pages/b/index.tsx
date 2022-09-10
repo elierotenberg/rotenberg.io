@@ -1,8 +1,10 @@
-import { GetStaticProps } from "next";
-import React, { FunctionComponent } from "react";
+import type { GetStaticProps } from "next";
+import type { FunctionComponent } from "react";
+import React from "react";
 
 import { BlogPostList } from "../../components/Blog/BlogPostList";
-import { BlogPostData, parseBlogPostData } from "../../lib/Blog";
+import type { BlogPostData } from "../../lib/Blog";
+import { parseBlogPostData } from "../../lib/Blog";
 import { blogPostsLoaders } from "../../posts";
 
 type StaticProps = {

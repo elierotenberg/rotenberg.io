@@ -3,20 +3,13 @@ import { Chance } from "chance";
 import { MdDeleteForever, MdOpenInNew } from "react-icons/md";
 import deepEqual from "fast-deep-equal";
 import { Input } from "@chakra-ui/input";
-import {
-  Container,
-  Flex,
-  FlexProps,
-  HStack,
-  Text,
-  VStack,
-} from "@chakra-ui/layout";
+import type { FlexProps } from "@chakra-ui/layout";
+import { Container, Flex, HStack, Text, VStack } from "@chakra-ui/layout";
 import { Select } from "@chakra-ui/select";
 import { AsyncResult } from "typed-utilities";
-import Head from "next/head";
+import type { FunctionComponent } from "react";
 import React, {
   Fragment,
-  FunctionComponent,
   useCallback,
   useEffect,
   useMemo,
@@ -26,6 +19,7 @@ import { z } from "zod";
 import createJsonUrlCodec from "json-url";
 import { Spinner } from "@chakra-ui/spinner";
 import { Checkbox, Heading, Icon, Textarea } from "@chakra-ui/react";
+import Script from "next/script";
 
 import { useAsync } from "../../lib/useAsync";
 import { isNotNull } from "../../lib/types";
@@ -33,16 +27,21 @@ import { useLocationHash } from "../../lib/useLocationHash";
 
 import ertLua from "./ert.lua";
 
-const pageTitle = `TBC Raidcomp`;
+const pageTitle = `WoW RaidComp`;
 
-declare const fengari: {
+type Fengari = {
   ert_lua_input: string;
   readonly load: (source: string) => () => unknown;
 };
 
+declare const fengari: void | Fengari;
+
 let runErtLua: null | (() => unknown) = null;
 
-const createErtRaidgroupsImportString = (groups: Groups): string => {
+const createErtRaidgroupsImportString = (
+  fengari: Fengari,
+  groups: Groups,
+): string => {
   if (!runErtLua) {
     runErtLua = fengari.load(ertLua);
   }
@@ -107,6 +106,30 @@ const Roster = z.object({
 type Roster = z.infer<typeof Roster>;
 
 const characterClasses: CharacterClass[] = [
+  {
+    characterClassName: `Death Knight`,
+    htmlColor: `#C41E3A`,
+    characterSpecs: [
+      {
+        characterSpecName: `Blood`,
+        role: `Tank`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_deathknight_bloodpresence.jpg`,
+        wowheadId: `K`,
+      },
+      {
+        characterSpecName: `Frost`,
+        role: `Melee`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_deathknight_frostpresence.jpg`,
+        wowheadId: `L`,
+      },
+      {
+        characterSpecName: `Unholy`,
+        role: `Melee`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_deathknight_unholypresence.jpg`,
+        wowheadId: `M`,
+      },
+    ],
+  },
   {
     characterClassName: `Druid`,
     htmlColor: `#FF7C0A`,
@@ -575,11 +598,11 @@ const getWowheadRaidcompHref = (roster: Roster): string => {
     .map((characterName) => characterName ?? ``)
     .join(`;`);
   const hash = `0${characterSpecs};${characterNames}`;
-  return `https://tbc.wowhead.com/raid-composition#${hash}`;
+  return `https://www.wowhead.com/wotlk/raid-composition#${hash}`;
 };
 
 const parseWowheadUrl = (roster: Roster, href: string): Roster => {
-  if (!href.startsWith(`https://tbc.wowhead.com/raid-composition#0`)) {
+  if (!href.startsWith(`https://www.wowhead.com/wotlk/raid-composition#0`)) {
     return roster;
   }
   const url = new URL(href);
@@ -780,7 +803,7 @@ const CharacterView: FunctionComponent<
     {...flexProps}
   >
     <CharacterSpecIcon characterSpec={characterSpec} w={5} h={5} />
-    <Text isTruncated minW={0} flex={1} pl={1}>
+    <Text overflow={`hidden`} textOverflow="ellipsis" minW={0} flex={1} pl={1}>
       {character.characterName}
     </Text>
   </Flex>
@@ -988,13 +1011,15 @@ const GroupView: FunctionComponent<{
 };
 
 const GroupsView: FunctionComponent<{
+  readonly fengari: null | Fengari;
   readonly roster: Roster;
   readonly onUpdateRoster: (next: (roster: Roster) => Roster) => void;
-}> = ({ roster, onUpdateRoster }) => {
+}> = ({ fengari, roster, onUpdateRoster }) => {
   const [dragGroupIndex, setDragGroupIndex] = useState<null | number>(null);
 
   const onDragStart = useCallback(
-    (dragGroupIndex) => setDragGroupIndex(dragGroupIndex),
+    (dragGroupIndex: React.SetStateAction<number | null>) =>
+      setDragGroupIndex(dragGroupIndex),
     [],
   );
 
@@ -1036,8 +1061,9 @@ const GroupsView: FunctionComponent<{
   const wowheadUrl = useMemo(() => getWowheadRaidcompHref(roster), [roster]);
 
   const ertString = useMemo(
-    () => createErtRaidgroupsImportString(roster.groups),
-    [roster.groups],
+    () =>
+      fengari ? createErtRaidgroupsImportString(fengari, roster.groups) : ``,
+    [fengari, roster.groups],
   );
 
   return (
@@ -1153,10 +1179,11 @@ const DEFAULT_ROSTER: Roster = {
   groups: createEmptyGroups(),
 };
 
-const TbcRaidcomp: FunctionComponent<{
+const WowRaidComp: FunctionComponent<{
+  readonly fengari: null | Fengari;
   readonly roster: Roster;
   readonly setRoster: (next: (roster: Roster) => Roster) => void;
-}> = ({ roster, setRoster }) => {
+}> = ({ fengari, roster, setRoster }) => {
   const onClickDownload = useCallback(() => {
     const link = document.createElement(`a`);
     link.download = `tbc-raidcomp.json`;
@@ -1169,7 +1196,11 @@ const TbcRaidcomp: FunctionComponent<{
 
   return (
     <VStack alignItems="flex-start" w="100%">
-      <GroupsView roster={roster} onUpdateRoster={setRoster} />
+      <GroupsView
+        fengari={fengari}
+        roster={roster}
+        onUpdateRoster={setRoster}
+      />
       <RosterView
         roster={roster}
         onUpsertCharacter={(character) =>
@@ -1227,8 +1258,9 @@ const TbcRaidcomp: FunctionComponent<{
   );
 };
 
-const TbcRaidcompPage: FunctionComponent = () => {
+const WowRaidCompPage: FunctionComponent = () => {
   const [localRoster, setLocalRoster] = useState<null | Roster>(null);
+  const [localFengari, setLocalFengari] = useState<null | Fengari>(null);
 
   const hashSerializedRoster = useLocationHash();
 
@@ -1238,6 +1270,12 @@ const TbcRaidcompPage: FunctionComponent = () => {
     }
     return await parseRoster(hashSerializedRoster).catch(() => DEFAULT_ROSTER);
   }, [hashSerializedRoster]);
+
+  const onLoadFengari = useCallback(() => {
+    if (fengari) {
+      setLocalFengari(fengari);
+    }
+  }, []);
 
   useEffect(() => {
     setLocalRoster((localRoster) =>
@@ -1274,15 +1312,14 @@ const TbcRaidcompPage: FunctionComponent = () => {
 
   return (
     <Fragment>
-      <Head>
-        <script src="/vendor/fengari-web.js" />
-      </Head>
+      <Script onLoad={onLoadFengari} src="/vendor/fengari-web.js" />
       <Container p={4} maxW="container.xl">
         <Heading as="h1" mb={6} textAlign="center">
           {pageTitle}
         </Heading>
         {localRoster ? (
-          <TbcRaidcomp
+          <WowRaidComp
+            fengari={localFengari}
             roster={localRoster}
             setRoster={(next) =>
               setLocalRoster((localRoster) =>
@@ -1299,4 +1336,4 @@ const TbcRaidcompPage: FunctionComponent = () => {
 };
 
 // Use default export to play nicely with next/dynamic
-export default TbcRaidcompPage;
+export default WowRaidCompPage;

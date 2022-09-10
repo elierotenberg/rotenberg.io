@@ -1,8 +1,9 @@
 import { Heading, Text, Box } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React, { Fragment, FunctionComponent, ReactElement } from "react";
+import type { FunctionComponent, ReactElement } from "react";
+import React, { Fragment } from "react";
 
-import { BlogPostData } from "../../lib/Blog";
+import type { BlogPostData } from "../../lib/Blog";
 import { translations } from "../../lib/translations";
 import { useCanonicalUrl } from "../../lib/url";
 import { Link } from "../Link";

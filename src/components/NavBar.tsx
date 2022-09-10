@@ -1,5 +1,6 @@
 import { HStack, StackDivider } from "@chakra-ui/react";
-import React, { FunctionComponent } from "react";
+import type { FunctionComponent } from "react";
+import React from "react";
 
 import { Link } from "./Link";
 
@@ -10,6 +11,11 @@ export const NavBar: FunctionComponent = () => (
     align="stretch"
     justify="center"
     lang="en"
+    sx={{
+      "@media print": {
+        display: `none`,
+      },
+    }}
   >
     <Link href="/">About</Link>
     <Link href="/b">Blog</Link>

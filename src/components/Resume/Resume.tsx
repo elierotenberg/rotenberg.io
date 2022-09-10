@@ -1,4 +1,5 @@
-import React, { FunctionComponent } from "react";
+import type { FunctionComponent } from "react";
+import React from "react";
 import { List, ListItem } from "@chakra-ui/react";
 
 import { Page } from "../Page";
@@ -13,7 +14,7 @@ import { Interests } from "./Interests";
 export const Resume: FunctionComponent = () => {
   return (
     <Page withFooter={true} withNavBar={true} title="Elie Rotenberg" lang="en">
-      <List alignItems="flex-start" spacing={4}>
+      <List alignItems="flex-start" spacing={4} mt={4}>
         <ListItem as="header">
           <Header />
         </ListItem>

@@ -35,7 +35,8 @@
     "typeRoots": [
       "./node_modules/@types",
       "./types"
-    ]
+    ],
+    "incremental": true
   },
   "exclude": [
     "node_modules",
@@ -48,5 +49,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-  ]
+  ],
+  "ts-node": {
+    "esm": true
+  }
 }

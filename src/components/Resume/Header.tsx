@@ -1,13 +1,14 @@
 import {
   Avatar,
   Heading,
-  HStack,
   Text,
   VisuallyHidden,
-  VStack,
   Icon,
+  Flex,
 } from "@chakra-ui/react";
-import React, { FunctionComponent } from "react";
+import type { FunctionComponent } from "react";
+import React from "react";
+import type { IconType } from "react-icons";
 import {
   FaRegEnvelope,
   FaGithub,
@@ -18,39 +19,81 @@ import {
 
 import { Link } from "../Link";
 
+const HeaderLink: FunctionComponent<{
+  href: string;
+  children: string;
+  icon: IconType;
+}> = ({ href, children, icon }) => {
+  const url = new URL(href);
+  return (
+    <Link
+      href={href}
+      isExternal
+      display={`inline-flex`}
+      alignItems="center"
+      gap={2}
+    >
+      <VisuallyHidden>{children}</VisuallyHidden>
+      <Icon as={icon} />
+      <Text
+        display={`none`}
+        sx={{
+          "@media print": {
+            display: `inline`,
+            fontSize: `sm`,
+          },
+        }}
+      >
+        {url.href
+          .slice(url.protocol.length)
+          .replace(/^\/*/, ``)
+          .replace(/\/*$/, ``)}
+      </Text>
+    </Link>
+  );
+};
+
 export const Header: FunctionComponent = () => {
   return (
-    <HStack spacing={4} w="100%" justify="center">
-      <Avatar src="/elie-rotenberg.png" title="Elie Rotenberg" size="xl" />
-      <VStack alignItems="flex-start" spacing={3}>
-        <Heading as="h1">Elie Rotenberg</Heading>
-        <Text>Entrepreneur, computer scientist, lifelong learner</Text>
-        <HStack>
-          <Link href="mailto:elie@rotenberg.io" isExternal>
-            <VisuallyHidden>Contact me by mail</VisuallyHidden>
-            <Icon as={FaRegEnvelope} />
-          </Link>
-          <Link href="https://github.com/elierotenberg" isExternal>
-            <VisuallyHidden>Github</VisuallyHidden>
-            <Icon as={FaGithub} />
-          </Link>
-          <Link href="https://twitter.com/elierotenberg" isExternal>
-            <VisuallyHidden>Twitter</VisuallyHidden>
-            <Icon as={FaTwitter} />
-          </Link>
-          <Link
-            href="https://www.linkedin.com/pub/elie-rotenberg/1a/271/348"
-            isExternal
-          >
-            <VisuallyHidden>LinkedIn</VisuallyHidden>
-            <Icon as={FaLinkedin} />
-          </Link>
-          <Link href="https://elie.rotenberg.io" isExternal>
-            <VisuallyHidden>Homepage</VisuallyHidden>
-            <Icon as={FaLink} />
-          </Link>
-        </HStack>
-      </VStack>
-    </HStack>
+    <Flex flexDirection={`column`} gap={4}>
+      <Flex flexDirection={`row`} gap={6} w="100%">
+        <Avatar src="/elie-rotenberg.png" title="Elie Rotenberg" size="xl" />
+        <Flex flexDirection={`column`}>
+          <Heading as="h1">Elie Rotenberg</Heading>
+          <Text>Entrepreneur, computer scientist, lifelong learner</Text>
+        </Flex>
+      </Flex>
+      <Flex
+        flexDirection={`row`}
+        alignItems="center"
+        gap={1}
+        pl={4}
+        sx={{
+          "@media print": {
+            alignItems: `flex-start`,
+            flexDirection: `column`,
+          },
+        }}
+      >
+        <HeaderLink href="mailto:elie@rotenberg.io" icon={FaRegEnvelope}>
+          Email
+        </HeaderLink>
+        <HeaderLink href="https://github.com/elierotenberg" icon={FaGithub}>
+          Github
+        </HeaderLink>
+        <HeaderLink href="https://twitter.com/elierotenberg" icon={FaTwitter}>
+          Twitter
+        </HeaderLink>
+        <HeaderLink
+          href="https://linkedin.com/in/elierotenberg"
+          icon={FaLinkedin}
+        >
+          LinkedIn
+        </HeaderLink>
+        <HeaderLink href="https://rotenberg.io" icon={FaLink}>
+          Homepage
+        </HeaderLink>
+      </Flex>
+    </Flex>
   );
 };

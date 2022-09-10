@@ -1,5 +1,6 @@
 import Head from "next/head";
-import React, { FunctionComponent, ReactNode } from "react";
+import type { FunctionComponent, ReactNode } from "react";
+import React from "react";
 import { Container, Box } from "@chakra-ui/react";
 
 import { useCanonicalUrlLink } from "../lib/url";

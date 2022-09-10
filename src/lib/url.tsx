@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
-import React, { useEffect, ReactNode, Fragment } from "react";
+import type { ReactNode } from "react";
+import React, { useEffect, Fragment } from "react";
 
 const canonicalBaseUrl = process.env.NEXT_PUBLIC_CANONICAL_BASE_URL;
 const allowBaseUrlPatterns = (

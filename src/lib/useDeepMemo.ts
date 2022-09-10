@@ -1,5 +1,6 @@
 import deepEqual from "fast-deep-equal";
-import { DependencyList, useEffect, useState } from "react";
+import type { DependencyList } from "react";
+import { useEffect, useState } from "react";
 
 export const useDeepMemo = <T>(fn: () => T, deps: DependencyList): T => {
   const [state, setState] = useState<[DependencyList, T]>(() => [deps, fn()]);

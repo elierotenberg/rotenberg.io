@@ -1,8 +1,13 @@
-import { join } from "path";
+import { dirname, join } from "path";
 import { promises } from "fs";
+import { fileURLToPath } from "url";
 
 import { config } from "dotenv";
-import globby from "globby";
+import { globby } from "globby";
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 config({
   path: join(__dirname, `..`, `.env.production`),
 });
@@ -32,9 +37,7 @@ export const sitemap = async (): Promise<void> => {
   });
 };
 
-if (require.main === module) {
-  sitemap().catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
-}
+sitemap().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

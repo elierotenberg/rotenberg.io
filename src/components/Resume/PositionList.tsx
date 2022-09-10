@@ -1,5 +1,6 @@
 import { Heading, List, ListItem, VStack } from "@chakra-ui/react";
-import React, { Children, FunctionComponent, ReactNode } from "react";
+import type { FunctionComponent, ReactNode } from "react";
+import React, { Children } from "react";
 
 interface IPositionListProps {
   readonly title: ReactNode;

@@ -1,16 +1,11 @@
 // Courtesy of https://github.com/chakra-ui/chakra-ui/blob/develop/examples/nextjs-typescript/components/NextChakraLink.tsx
 
-import React, {
-  ElementType,
-  FunctionComponent,
-  PropsWithChildren,
-} from "react";
+import type { ElementType, FunctionComponent, PropsWithChildren } from "react";
+import React from "react";
 import NextLink from "next/link";
-import { LinkProps as NextLinkProps } from "next/dist/client/link";
-import {
-  Link as ChakraLink,
-  LinkProps as ChakraLinkProps,
-} from "@chakra-ui/react";
+import type { LinkProps as NextLinkProps } from "next/dist/client/link";
+import type { LinkProps as ChakraLinkProps } from "@chakra-ui/react";
+import { Link as ChakraLink } from "@chakra-ui/react";
 
 export type NextChakraLinkProps = PropsWithChildren<
   NextLinkProps & Omit<ChakraLinkProps, `as`>

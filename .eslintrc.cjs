@@ -9,6 +9,7 @@ module.exports = {
     `plugin:import/errors`,
     `plugin:import/warnings`,
     `plugin:import/typescript`,
+    `plugin:@next/next/recommended`,
   ],
   settings: {
     "import/parsers": {
@@ -25,6 +26,11 @@ module.exports = {
   },
   rules: {
     "prettier/prettier": [1, { trailingComma: `all`, endOfLine: `auto` }],
+    "@next/next/no-img-element": [0],
+    "@typescript-eslint/consistent-type-imports": [
+      1,
+      { prefer: `type-imports` },
+    ],
     "@typescript-eslint/no-unused-vars": [1, { argsIgnorePattern: `^_` }],
     "@typescript-eslint/naming-convention": [
       `error`,

@@ -1,11 +1,7 @@
-import {
-  List,
-  ListItem,
-  ListProps,
-  Tag as ChakraTag,
-  TagProps,
-} from "@chakra-ui/react";
-import React, { FunctionComponent } from "react";
+import type { ListProps, TagProps } from "@chakra-ui/react";
+import { List, ListItem, Tag as ChakraTag } from "@chakra-ui/react";
+import type { FunctionComponent } from "react";
+import React from "react";
 
 interface ITagListProps extends Omit<ListProps, `children`> {
   readonly tags: string[];

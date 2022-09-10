@@ -1,13 +1,12 @@
-import { DependencyList, useEffect, useState } from "react";
+import type { DependencyList } from "react";
+import { useEffect, useState } from "react";
 import { AsyncResult } from "typed-utilities";
 
 export const useAsync = <T>(
   fn: () => Promise<T>,
   deps: DependencyList,
-): AsyncResult.AsyncResult<T> => {
-  const [state, setState] = useState<AsyncResult.AsyncResult<T>>(
-    AsyncResult.of.pending(),
-  );
+): AsyncResult<T> => {
+  const [state, setState] = useState<AsyncResult<T>>(AsyncResult.of.pending());
 
   useEffect(() => {
     setState(AsyncResult.of.pending());

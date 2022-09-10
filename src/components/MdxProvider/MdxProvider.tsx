@@ -1,6 +1,7 @@
-import * as t from "typed-assert";
-import React, { ComponentProps, Fragment, FunctionComponent } from "react";
-import { MDXProvider as BaseMdxProvider, Components } from "@mdx-js/react";
+import type { ComponentProps, FunctionComponent, ReactNode } from "react";
+import React, { Fragment } from "react";
+import type { Components } from "@mdx-js/react";
+import { MDXProvider as BaseMdxProvider } from "@mdx-js/react";
 import {
   Code,
   Divider,
@@ -18,17 +19,31 @@ import { Link } from "./helpers/Link";
 
 const CodeBlock = dynamic(() => import(`../CodeBlock`));
 
-const components: Components = {
-  code: ({ children, className }) => {
-    t.isString(children);
-    t.isString(className);
-    const tokens = className.slice(`language-`.length).split(`\n`);
-    const lang = (
+const CODE_CLASS_NAME_LANG_PREFIX = `language-`;
+const parseCodeClassNameAsLang = (className?: string): undefined | string => {
+  if (className?.startsWith(CODE_CLASS_NAME_LANG_PREFIX)) {
+    const tokens = className
+      .slice(CODE_CLASS_NAME_LANG_PREFIX.length)
+      .split(`\n`);
+    return (
       tokens[tokens.length - 1].length === 0 ? tokens.slice(0, -1) : tokens
     ).join(`\n`);
-    return <CodeBlock lang={lang}>{children}</CodeBlock>;
+  }
+  return void 0;
+};
+
+const components: Components = {
+  code: ({ children = ``, className = `` }) => {
+    if (children.includes(`\n`)) {
+      return (
+        <CodeBlock lang={parseCodeClassNameAsLang(className)}>
+          {children ?? ``}
+        </CodeBlock>
+      );
+    }
+    return <Code display={`inline`}>{children}</Code>;
   },
-  inlineCode: (props) => <Code {...props} />,
+  inlineCode: (props) => <Code display={`inline`} {...props} />,
   a: (props) => <Link {...(props as unknown as ComponentProps<typeof Link>)} />,
   h1: (props) => (
     <Fragment>
@@ -48,9 +63,20 @@ const components: Components = {
   ol: OrderedList,
   li: (props) => <ListItem my={1} {...props} />,
   img: (props) => <Figure maxHeight={320} objectFit="contain" {...props} />,
-  p: (props) => <Text textAlign="justify" my={4} lineHeight={1.5} {...props} />,
+  p: (props) => (
+    <Text
+      as="div"
+      textAlign="justify"
+      sx={{ hyphens: `auto` }}
+      my={4}
+      lineHeight={1.5}
+      {...props}
+    />
+  ),
 };
 
-export const MdxProvider: FunctionComponent = ({ children }) => (
+export const MdxProvider: FunctionComponent<{
+  readonly children?: ReactNode;
+}> = ({ children }) => (
   <BaseMdxProvider components={components}>{children}</BaseMdxProvider>
 );

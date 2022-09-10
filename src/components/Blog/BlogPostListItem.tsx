@@ -1,7 +1,8 @@
 import { ListItem } from "@chakra-ui/react";
-import React, { FunctionComponent } from "react";
+import type { FunctionComponent } from "react";
+import React from "react";
 
-import { BlogPostData } from "../../lib/Blog";
+import type { BlogPostData } from "../../lib/Blog";
 
 import { BlogPostCard } from "./BlogPostCard";
 
