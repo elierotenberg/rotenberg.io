@@ -36,7 +36,12 @@ module.exports = {
       `error`,
       {
         selector: `variableLike`,
-        format: [`strictCamelCase`, `UPPER_CASE`, `StrictPascalCase`],
+        format: [
+          `strictCamelCase`,
+          `UPPER_CASE`,
+          `StrictPascalCase`,
+          `snake_case`,
+        ],
         leadingUnderscore: `allow`,
       },
     ],
