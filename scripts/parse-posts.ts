@@ -1,7 +1,11 @@
-import { join, relative } from "path";
+import { dirname, join, relative } from "path";
 import { promises } from "fs";
+import { fileURLToPath } from "url";
 
-import globby from "globby";
+import { globby } from "globby";
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const main = async (): Promise<void> => {
   const postsRoot = join(__dirname, `..`, `src`, `posts`);
@@ -31,16 +35,7 @@ const main = async (): Promise<void> => {
   });
 };
 
-if (require.main === module) {
-  main().catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
-} else {
-  console.error(
-    `This module should only be called as main module, not imported.`,
-  );
+main().catch((error) => {
+  console.error(error);
   process.exit(1);
-}
-
-export {};
+});

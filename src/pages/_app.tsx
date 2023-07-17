@@ -1,6 +1,7 @@
-import React, { FunctionComponent, useEffect } from "react";
+import type { FunctionComponent } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/router";
-import { AppProps } from "next/app";
+import type { AppProps } from "next/app";
 import { ChakraProvider } from "@chakra-ui/react";
 
 import { triggerPageView } from "../lib/GoogleAnalytics";

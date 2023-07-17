@@ -1,9 +1,10 @@
-import React, { FunctionComponent } from "react";
+import type { FunctionComponent } from "react";
+import React from "react";
 import { PrismAsync as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
 type CodeBlockProps = {
-  readonly lang: string;
+  readonly lang?: string;
   readonly children: string;
 };
 

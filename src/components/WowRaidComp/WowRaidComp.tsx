@@ -3,20 +3,13 @@ import { Chance } from "chance";
 import { MdDeleteForever, MdOpenInNew } from "react-icons/md";
 import deepEqual from "fast-deep-equal";
 import { Input } from "@chakra-ui/input";
-import {
-  Container,
-  Flex,
-  FlexProps,
-  HStack,
-  Text,
-  VStack,
-} from "@chakra-ui/layout";
+import type { FlexProps } from "@chakra-ui/layout";
+import { Container, Flex, HStack, Text, VStack } from "@chakra-ui/layout";
 import { Select } from "@chakra-ui/select";
 import { AsyncResult } from "typed-utilities";
-import Head from "next/head";
+import type { FunctionComponent } from "react";
 import React, {
   Fragment,
-  FunctionComponent,
   useCallback,
   useEffect,
   useMemo,
@@ -26,6 +19,7 @@ import { z } from "zod";
 import createJsonUrlCodec from "json-url";
 import { Spinner } from "@chakra-ui/spinner";
 import { Checkbox, Heading, Icon, Textarea } from "@chakra-ui/react";
+import Script from "next/script";
 
 import { useAsync } from "../../lib/useAsync";
 import { isNotNull } from "../../lib/types";
@@ -33,16 +27,21 @@ import { useLocationHash } from "../../lib/useLocationHash";
 
 import ertLua from "./ert.lua";
 
-const pageTitle = `TBC Raidcomp`;
+const pageTitle = `WoW RaidComp`;
 
-declare const fengari: {
+type Fengari = {
   ert_lua_input: string;
   readonly load: (source: string) => () => unknown;
 };
 
+declare const fengari: void | Fengari;
+
 let runErtLua: null | (() => unknown) = null;
 
-const createErtRaidgroupsImportString = (groups: Groups): string => {
+const createErtRaidgroupsImportString = (
+  fengari: Fengari,
+  groups: Groups,
+): string => {
   if (!runErtLua) {
     runErtLua = fengari.load(ertLua);
   }
@@ -107,6 +106,30 @@ const Roster = z.object({
 type Roster = z.infer<typeof Roster>;
 
 const characterClasses: CharacterClass[] = [
+  {
+    characterClassName: `Death Knight`,
+    htmlColor: `#C41E3A`,
+    characterSpecs: [
+      {
+        characterSpecName: `Blood`,
+        role: `Tank`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_deathknight_bloodpresence.jpg`,
+        wowheadId: `K`,
+      },
+      {
+        characterSpecName: `Frost`,
+        role: `Melee`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_deathknight_frostpresence.jpg`,
+        wowheadId: `L`,
+      },
+      {
+        characterSpecName: `Unholy`,
+        role: `Melee`,
+        iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_deathknight_unholypresence.jpg`,
+        wowheadId: `M`,
+      },
+    ],
+  },
   {
     characterClassName: `Druid`,
     htmlColor: `#FF7C0A`,
@@ -197,7 +220,7 @@ const characterClasses: CharacterClass[] = [
       },
       {
         characterSpecName: `Retribution`,
-        role: `Heal`,
+        role: `Melee`,
         iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_holy_auraoflight.jpg`,
         wowheadId: `G`,
       },
@@ -223,7 +246,7 @@ const characterClasses: CharacterClass[] = [
         characterSpecName: `Shadow`,
         role: `Ranged`,
         iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_shadow_shadowwordpain.jpg`,
-        wowheadId: `n`,
+        wowheadId: `q`,
       },
     ],
   },
@@ -269,7 +292,7 @@ const characterClasses: CharacterClass[] = [
       },
       {
         characterSpecName: `Restoration`,
-        role: `Melee`,
+        role: `Heal`,
         iconHref: `https://wow.zamimg.com/images/wow/icons/medium/spell_nature_magicimmunity.jpg`,
         wowheadId: `s`,
       },
@@ -324,6 +347,7 @@ const characterClasses: CharacterClass[] = [
     ],
   },
 ];
+
 const findCharacterClass = (
   characterClassName: CharacterClass[`characterClassName`],
 ): CharacterClass | null =>
@@ -457,6 +481,101 @@ const createFakeRoster = (seed: number): Roster => {
   );
 };
 
+type SerializeRoster = (roster: Roster) => Promise<string>;
+type ParseRoster = (input: string) => Promise<Roster>;
+
+const SerializedRosterV0 = Roster;
+
+type SerializedRosterV0 = z.infer<typeof SerializedRosterV1>;
+
+const serializeRosterV0: SerializeRoster = (roster) =>
+  jsonUrlCodec.compress(roster);
+
+void serializeRosterV0;
+
+const parseRosterV0: ParseRoster = (input) =>
+  jsonUrlCodec.decompress(input).then(SerializedRosterV0.parse);
+
+const SerializedRosterV1 = z.tuple([
+  z.array(z.tuple([z.string(), z.string()])), // [characterName, wowheadId]
+  z
+    .array(
+      z.union([
+        z.null(),
+        z
+          .number()
+          .refine((characterIndex) => Number.isSafeInteger(characterIndex)),
+      ]),
+    )
+    .length(40),
+]);
+
+type SerializedRosterV1 = z.infer<typeof SerializedRosterV1>;
+
+const serializeRosterV1: SerializeRoster = async (roster) => {
+  const serializedRosterV1: SerializedRosterV1 = [
+    roster.characters
+      .map((character): null | [string, string] => {
+        const characterClass = findCharacterClass(character.characterClassName);
+        const characterSpec = characterClass
+          ? findCharacterSpec(characterClass, character.characterSpecName)
+          : null;
+        if (!characterSpec) {
+          return null;
+        }
+        return [character.characterName, characterSpec.wowheadId];
+      })
+      .filter(isNotNull),
+    roster.groups.map((characterName) =>
+      characterName
+        ? roster.characters.findIndex(
+            (character) => character.characterName === characterName,
+          ) ?? null
+        : null,
+    ),
+  ];
+  return await jsonUrlCodec.compress(serializedRosterV1);
+};
+
+const parseRosterV1 = async (input: string): Promise<Roster> => {
+  const [serializedCharacters, serializedGroups] = await jsonUrlCodec
+    .decompress(input)
+    .then(SerializedRosterV1.parse);
+  const characters = serializedCharacters.map(
+    ([characterName, wowheadId]): Character => {
+      const {
+        characterClass: { characterClassName },
+        characterSpec: { characterSpecName },
+      } = findCharacterClassSpecByWowheadId(wowheadId) ?? {
+        characterClass: characterClasses[0],
+        characterSpec: characterClasses[0].characterSpecs[0],
+      };
+      return {
+        characterName,
+        characterClassName,
+        characterSpecName,
+      };
+    },
+  );
+  const groups = serializedGroups.map((characterIndex) =>
+    characterIndex === null ? null : characters[characterIndex].characterName,
+  );
+  return {
+    characters,
+    groups,
+  };
+};
+
+const serializeRoster: SerializeRoster = async (roster) =>
+  `v1:${await serializeRosterV1(roster)}`;
+
+const parseRoster: ParseRoster = async (input) => {
+  if (input.startsWith(`v1:`)) {
+    return await parseRosterV1(input.slice(`v1:`.length));
+  }
+  return await parseRosterV0(input);
+};
+
 const EMPTY_CHARACTER_SPEC_WOWHEAD_ID = `0`;
 
 const getWowheadRaidcompHref = (roster: Roster): string => {
@@ -479,15 +598,15 @@ const getWowheadRaidcompHref = (roster: Roster): string => {
     .map((characterName) => characterName ?? ``)
     .join(`;`);
   const hash = `0${characterSpecs};${characterNames}`;
-  return `https://tbc.wowhead.com/raid-composition#${hash}`;
+  return `https://www.wowhead.com/wotlk/raid-composition#${hash}`;
 };
 
 const parseWowheadUrl = (roster: Roster, href: string): Roster => {
-  if (!href.startsWith(`https://tbc.wowhead.com/raid-composition#0`)) {
+  if (!href.startsWith(`https://www.wowhead.com/wotlk/raid-composition#0`)) {
     return roster;
   }
   const url = new URL(href);
-  const [characterSpecs, ...characterNames] = url.hash
+  const [characterSpecs, ...characterNames] = decodeURIComponent(url.hash)
     .slice(`#0`.length)
     .split(`;`);
   const characters = createEmptyGroups().map(
@@ -684,7 +803,7 @@ const CharacterView: FunctionComponent<
     {...flexProps}
   >
     <CharacterSpecIcon characterSpec={characterSpec} w={5} h={5} />
-    <Text isTruncated minW={0} flex={1} pl={1}>
+    <Text overflow={`hidden`} textOverflow="ellipsis" minW={0} flex={1} pl={1}>
       {character.characterName}
     </Text>
   </Flex>
@@ -815,16 +934,21 @@ const RosterView: FunctionComponent<{
 
 const GroupView: FunctionComponent<{
   readonly roster: Roster;
-  readonly groupIndex: number;
-}> = ({ roster, groupIndex }) => {
+  readonly groupNumber: number;
+  readonly onDragStart: (dragGroupIndex: number) => void;
+  readonly onDragEnd: () => void;
+  readonly onDrop: (dropGroupIndex: number) => void;
+}> = ({ roster, groupNumber, onDragStart, onDragEnd, onDrop }) => {
+  const [dragOver, setDragOver] = useState<null | number>(null);
+  const startGroupIndex = GROUP_SIZE * groupNumber;
   const groupCharacters = roster.groups.slice(
-    GROUP_SIZE * groupIndex,
-    GROUP_SIZE * (groupIndex + 1),
+    startGroupIndex,
+    startGroupIndex + GROUP_SIZE,
   );
   return (
     <VStack w={40} alignItems="stretch" mx={2} mt={1}>
-      <Heading as="h3" fontSize="lg">{`Group ${groupIndex + 1}`}</Heading>
-      {groupCharacters.map((characterName, key) => {
+      <Heading as="h3" fontSize="lg">{`Group ${groupNumber + 1}`}</Heading>
+      {groupCharacters.map((characterName, groupIndexOffset) => {
         const character = characterName
           ? findCharacter(roster, characterName)
           : null;
@@ -835,27 +959,50 @@ const GroupView: FunctionComponent<{
           character && characterClass
             ? findCharacterSpec(characterClass, character.characterSpecName)
             : null;
+        const groupIndex = startGroupIndex + groupIndexOffset;
+        const draggableProps: FlexProps = {
+          onDrag: (event) => {
+            event.dataTransfer.setData(`text/plain`, `${groupIndex}`);
+            event.dataTransfer.effectAllowed = `move`;
+            onDragStart(groupIndex);
+          },
+          onDragEnd,
+          onDragOver: (event) => {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = `move`;
+          },
+          onDragEnter: () => setDragOver(groupIndex),
+          onDragExit: () => setDragOver(null),
+          onDrop: (event) => {
+            event.preventDefault();
+            setDragOver(null);
+            onDrop(groupIndex);
+          },
+        };
         if (!character || !characterClass || !characterSpec) {
           return (
-            <Flex key={key} h={7}>
-              <Text
-                fontStyle="italic"
-                textAlign="center"
-                w="100%"
-                textColor="blackAlpha.600"
-              >
-                (Empty)
-              </Text>
-            </Flex>
+            <Flex
+              key={groupIndexOffset}
+              h={7}
+              {...draggableProps}
+              bgColor={
+                dragOver === groupIndex ? `blackAlpha.300` : `blackAlpha.50`
+              }
+              w="100%"
+            />
           );
         }
         return (
           <CharacterView
-            key={key}
+            key={groupIndexOffset}
             character={character}
             characterClass={characterClass}
             characterSpec={characterSpec}
             h={7}
+            draggable
+            {...draggableProps}
+            cursor="grab"
+            filter={dragOver === groupIndex ? `brightness(70%)` : undefined}
           />
         );
       })}
@@ -864,24 +1011,60 @@ const GroupView: FunctionComponent<{
 };
 
 const GroupsView: FunctionComponent<{
+  readonly fengari: null | Fengari;
   readonly roster: Roster;
   readonly onUpdateRoster: (next: (roster: Roster) => Roster) => void;
-}> = ({ roster, onUpdateRoster }) => {
+}> = ({ fengari, roster, onUpdateRoster }) => {
+  const [dragGroupIndex, setDragGroupIndex] = useState<null | number>(null);
+
+  const onDragStart = useCallback(
+    (dragGroupIndex: React.SetStateAction<number | null>) =>
+      setDragGroupIndex(dragGroupIndex),
+    [],
+  );
+
+  const onDragEnd = useCallback(
+    () =>
+      onUpdateRoster((roster) => {
+        if (dragGroupIndex === null) {
+          return roster;
+        }
+        const characterName = roster.groups[dragGroupIndex];
+        if (!characterName) {
+          return roster;
+        }
+        return disenrollCharacter(roster, characterName);
+      }),
+    [dragGroupIndex],
+  );
+
+  const onDrop = useCallback(
+    (dropGroupIndex: number) => {
+      if (dragGroupIndex === null) {
+        return;
+      }
+      onUpdateRoster((roster) => ({
+        ...roster,
+        groups: roster.groups.map((characterName, groupIndex) =>
+          groupIndex === dragGroupIndex
+            ? roster.groups[dropGroupIndex]
+            : groupIndex === dropGroupIndex
+            ? roster.groups[dragGroupIndex]
+            : characterName,
+        ),
+      }));
+      setDragGroupIndex(null);
+    },
+    [dragGroupIndex, onUpdateRoster],
+  );
+
   const wowheadUrl = useMemo(() => getWowheadRaidcompHref(roster), [roster]);
 
   const ertString = useMemo(
-    () => createErtRaidgroupsImportString(roster.groups),
-    [roster.groups],
+    () =>
+      fengari ? createErtRaidgroupsImportString(fengari, roster.groups) : ``,
+    [fengari, roster.groups],
   );
-
-  const lastCharacterIndex = roster.groups
-    .map((characterName) => (characterName ? true : false))
-    .lastIndexOf(true);
-
-  const lastNonEmptyGroupIndex = Math.ceil(
-    (lastCharacterIndex + 1) / GROUP_SIZE,
-  );
-  const numDisplayedGroups = Math.max(5, lastNonEmptyGroupIndex);
 
   return (
     <VStack w="100%" alignItems="flex-start" spacing={4}>
@@ -889,8 +1072,15 @@ const GroupsView: FunctionComponent<{
         Groups
       </Heading>
       <Flex alignItems="flex-start" pl={6} flexWrap="wrap">
-        {new Array(numDisplayedGroups).fill(null).map((_, groupIndex) => (
-          <GroupView key={groupIndex} roster={roster} groupIndex={groupIndex} />
+        {new Array(NUM_GROUPS).fill(null).map((_, groupNumber) => (
+          <GroupView
+            key={groupNumber}
+            roster={roster}
+            groupNumber={groupNumber}
+            onDragStart={onDragStart}
+            onDragEnd={onDragEnd}
+            onDrop={onDrop}
+          />
         ))}
       </Flex>
       <VStack alignItems="flex-start" pl={6}>
@@ -950,6 +1140,7 @@ const GroupsView: FunctionComponent<{
             w={96}
             type="text"
             value={wowheadUrl}
+            onFocus={({ target }) => target.select()}
             onChange={({ target: { value: wowheadUrl } }) =>
               onUpdateRoster(() => parseWowheadUrl(roster, wowheadUrl))
             }
@@ -974,6 +1165,7 @@ const GroupsView: FunctionComponent<{
           w={96}
           h={64}
           value={ertString}
+          onFocus={({ target }) => target.select()}
           onChange={() => null}
           resize="none"
         />
@@ -987,10 +1179,11 @@ const DEFAULT_ROSTER: Roster = {
   groups: createEmptyGroups(),
 };
 
-const TbcRaidcomp: FunctionComponent<{
+const WowRaidComp: FunctionComponent<{
+  readonly fengari: null | Fengari;
   readonly roster: Roster;
   readonly setRoster: (next: (roster: Roster) => Roster) => void;
-}> = ({ roster, setRoster }) => {
+}> = ({ fengari, roster, setRoster }) => {
   const onClickDownload = useCallback(() => {
     const link = document.createElement(`a`);
     link.download = `tbc-raidcomp.json`;
@@ -1003,7 +1196,11 @@ const TbcRaidcomp: FunctionComponent<{
 
   return (
     <VStack alignItems="flex-start" w="100%">
-      <GroupsView roster={roster} onUpdateRoster={setRoster} />
+      <GroupsView
+        fengari={fengari}
+        roster={roster}
+        onUpdateRoster={setRoster}
+      />
       <RosterView
         roster={roster}
         onUpsertCharacter={(character) =>
@@ -1061,20 +1258,24 @@ const TbcRaidcomp: FunctionComponent<{
   );
 };
 
-const TbcRaidcompPage: FunctionComponent = () => {
+const WowRaidCompPage: FunctionComponent = () => {
   const [localRoster, setLocalRoster] = useState<null | Roster>(null);
+  const [localFengari, setLocalFengari] = useState<null | Fengari>(null);
 
-  const hashJsonUrl = useLocationHash();
+  const hashSerializedRoster = useLocationHash();
 
   const hashRoster = useAsync(async () => {
-    if (!hashJsonUrl) {
+    if (!hashSerializedRoster) {
       return DEFAULT_ROSTER;
     }
-    return await jsonUrlCodec
-      .decompress(hashJsonUrl)
-      .then(Roster.parse)
-      .catch(() => DEFAULT_ROSTER);
-  }, [hashJsonUrl]);
+    return await parseRoster(hashSerializedRoster).catch(() => DEFAULT_ROSTER);
+  }, [hashSerializedRoster]);
+
+  const onLoadFengari = useCallback(() => {
+    if (fengari) {
+      setLocalFengari(fengari);
+    }
+  }, []);
 
   useEffect(() => {
     setLocalRoster((localRoster) =>
@@ -1087,36 +1288,38 @@ const TbcRaidcompPage: FunctionComponent = () => {
     );
   }, [hashRoster]);
 
-  const localJsonUrl = useAsync(
-    async () => (localRoster ? await jsonUrlCodec.compress(localRoster) : null),
+  const localSerializedRoster = useAsync(
+    async () => (localRoster ? await serializeRoster(localRoster) : null),
     [localRoster],
   );
 
   useEffect(() => {
-    AsyncResult.match(localJsonUrl, {
+    AsyncResult.match(localSerializedRoster, {
       pending: () => null,
       rejected: () => null,
-      resolved: (localJsonUrl) => {
-        if (localJsonUrl && localJsonUrl !== hashJsonUrl) {
+      resolved: (localSerializedRoster) => {
+        if (
+          localSerializedRoster &&
+          localSerializedRoster !== hashSerializedRoster
+        ) {
           const nextUrl = new URL(window.location.href);
-          nextUrl.hash = localJsonUrl;
+          nextUrl.hash = localSerializedRoster;
           history.pushState(null, pageTitle, nextUrl.href);
         }
       },
     });
-  }, [localJsonUrl]);
+  }, [localSerializedRoster]);
 
   return (
     <Fragment>
-      <Head>
-        <script src="/vendor/fengari-web.js" />
-      </Head>
+      <Script onLoad={onLoadFengari} src="/vendor/fengari-web.js" />
       <Container p={4} maxW="container.xl">
         <Heading as="h1" mb={6} textAlign="center">
           {pageTitle}
         </Heading>
         {localRoster ? (
-          <TbcRaidcomp
+          <WowRaidComp
+            fengari={localFengari}
             roster={localRoster}
             setRoster={(next) =>
               setLocalRoster((localRoster) =>
@@ -1133,4 +1336,4 @@ const TbcRaidcompPage: FunctionComponent = () => {
 };
 
 // Use default export to play nicely with next/dynamic
-export default TbcRaidcompPage;
+export default WowRaidCompPage;

@@ -1,5 +1,6 @@
 import { Heading, HStack, VStack } from "@chakra-ui/react";
-import React, { FunctionComponent } from "react";
+import type { FunctionComponent } from "react";
+import React from "react";
 
 import { TagList } from "../TagList";
 
@@ -12,11 +13,14 @@ const interests = [
   `education`,
   `evolution`,
   `gaming`,
+  `learning`,
   `machine learning`,
   `maths`,
+  `mental health`,
   `psychology`,
   `react`,
   `software engineering`,
+  `sustainable development`,
   `typescript`,
 ];
 

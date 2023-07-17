@@ -1,10 +1,7 @@
-import React, {
-  Fragment,
-  FunctionComponent,
-  ReactElement,
-  useMemo,
-} from "react";
-import { Heading as ChakraHeading, HeadingProps } from "@chakra-ui/react";
+import type { FunctionComponent, ReactElement } from "react";
+import React, { Fragment, useMemo } from "react";
+import type { HeadingProps } from "@chakra-ui/react";
+import { Heading as ChakraHeading } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 
 import { Link } from "../../Link";

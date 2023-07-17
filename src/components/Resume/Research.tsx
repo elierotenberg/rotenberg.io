@@ -1,5 +1,6 @@
 import { ListItem, Text, UnorderedList } from "@chakra-ui/react";
-import React, { FunctionComponent, ReactNode } from "react";
+import type { FunctionComponent, ReactNode } from "react";
+import React from "react";
 
 import { Link } from "../Link";
 
@@ -10,6 +11,7 @@ interface IResearchPaperListItemProps {
   readonly href: string;
   readonly authors?: ReactNode;
   readonly context?: ReactNode;
+  readonly children?: ReactNode;
 }
 
 const ResearchPaperListItem: FunctionComponent<IResearchPaperListItemProps> = ({

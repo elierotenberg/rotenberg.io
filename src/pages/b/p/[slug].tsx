@@ -1,8 +1,10 @@
-import { GetStaticPaths, GetStaticProps } from "next";
-import React, { FunctionComponent } from "react";
+import type { GetStaticPaths, GetStaticProps } from "next";
+import type { FunctionComponent } from "react";
+import React from "react";
 import * as t from "typed-assert";
 
-import { BlogPostData, parseBlogPostData } from "../../../lib/Blog";
+import type { BlogPostData } from "../../../lib/Blog";
+import { parseBlogPostData } from "../../../lib/Blog";
 import { BlogPost } from "../../../components/Blog/BlogPost";
 import { blogPostsLoaders } from "../../../posts";
 

@@ -1,4 +1,5 @@
-import React, { Fragment, ReactElement } from "react";
+import type { ReactElement } from "react";
+import React, { Fragment } from "react";
 
 export const GA_TRACKING_ID = `UA-58418549-1`;
 

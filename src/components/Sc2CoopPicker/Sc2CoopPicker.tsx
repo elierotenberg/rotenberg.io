@@ -1,11 +1,6 @@
 import { Box, Button, Container, Heading } from "@chakra-ui/react";
-import React, {
-  FunctionComponent,
-  useState,
-  useEffect,
-  useCallback,
-  FormEvent,
-} from "react";
+import type { FunctionComponent, FormEvent } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 enum Commander {
   Raynor = `Raynor`,

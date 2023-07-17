@@ -1,11 +1,12 @@
-import React, { FunctionComponent } from "react";
+import type { FunctionComponent } from "react";
+import React from "react";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 
 import { useCanonicalUrlLink } from "../../../lib/url";
 
-const TbcRaidcompPage = dynamic(
-  import(`../../../components/TbcRaidcomp/TbcRaidcomp`),
+const WowRaidCompPage = dynamic(
+  import(`../../../components/WowRaidComp/WowRaidComp`),
 );
 
 const Index: FunctionComponent = () => {
@@ -13,10 +14,10 @@ const Index: FunctionComponent = () => {
   return (
     <>
       <Head>
-        <title>TBC Raidcomp</title>
+        <title>WoW RaidComp</title>
         {link}
       </Head>
-      <TbcRaidcompPage />
+      <WowRaidCompPage />
     </>
   );
 };
