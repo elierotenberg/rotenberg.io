@@ -22,3 +22,12 @@ a[href]:active,
 a[href]:focus {
   color: var(--link-color-active);
 }
+
+/* Offset for fixed navbar */
+[id]::before {
+  content: "";
+  display: block;
+  height: 4rem;
+  margin-top: -4rem;
+  visibility: hidden;
+}

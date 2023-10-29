@@ -15,8 +15,10 @@ const Section: FunctionComponent<{
 }> = ({ children, id, title }) => {
   return (
     <section className="flex flex-col gap-3">
-      <a id={id} href={`#${id}`}>
-        <h2 className="text-lg font-medium sm:text-2xl">{title}</h2>
+      <a href={`#${id}`}>
+        <h2 id={id} className="text-lg font-medium sm:text-2xl">
+          {title}
+        </h2>
       </a>
       {children}
     </section>
@@ -47,7 +49,7 @@ const ListItem: FunctionComponent<{
 
 export default function Home() {
   return (
-    <main className="container mx-auto flex max-w-3xl flex-col gap-8 px-4 py-5">
+    <main className="container mx-auto flex max-w-6xl flex-col gap-8 px-4 py-5">
       <header className="flex flex-row items-center gap-4 rounded-sm bg-white px-3 py-4 shadow-sm">
         <div className="w-16 sm:w-24">{myself.picture}</div>
         <div className="flex flex-1 flex-col">
