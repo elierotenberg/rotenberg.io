@@ -1,113 +1,125 @@
-import Image from 'next/image'
+import type { Metadata } from "next";
+
+import { myself } from "../lib/Self";
+import type { FunctionComponent, ReactNode } from "react";
+
+export const metadata: Metadata = {
+  description: "Broad-spectrum hobbyist",
+  title: "Elie Rotenberg",
+};
+
+const Section: FunctionComponent<{
+  readonly id: string;
+  readonly title: string;
+  readonly children: ReactNode;
+}> = ({ children, id, title }) => {
+  return (
+    <section className="flex flex-col gap-3">
+      <a id={id} href={`#${id}`}>
+        <h2 className="text-lg font-medium sm:text-2xl">{title}</h2>
+      </a>
+      {children}
+    </section>
+  );
+};
+
+const ListItem: FunctionComponent<{
+  readonly title: ReactNode;
+  readonly date?: undefined | ReactNode;
+  readonly description?: undefined | ReactNode;
+  readonly picture?: undefined | ReactNode;
+}> = ({ date, description, picture, title }) => {
+  return (
+    <div className="flex flex-row items-center gap-4 rounded-sm bg-white px-3 py-4 shadow-sm">
+      <div className="flex flex-1 flex-col">
+        <h3 className="text-base">{title}</h3>
+        {date && <span className="text-sm">{date}</span>}
+        {description && <div className="text-sm">{description}</div>}
+      </div>
+      {picture && (
+        <div className="flex w-16 flex-col items-center justify-center bg-white sm:w-24">
+          {picture}
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <main className="container mx-auto flex max-w-3xl flex-col gap-8 px-4 py-5">
+      <header className="flex flex-row items-center gap-4 rounded-sm bg-white px-3 py-4 shadow-sm">
+        <div className="w-16 sm:w-24">{myself.picture}</div>
+        <div className="flex flex-1 flex-col">
+          <h1 className="mb-0 text-xl font-semibold sm:text-3xl">
+            {myself.name}
+          </h1>
+          <p className="text-sm sm:text-lg">{myself.description}</p>
+          <ol className="mt-1 flex flex-row items-center gap-1.5 sm:mt-3">
+            {myself.links.map(({ IconType, href, key, title }) => (
+              <li key={key}>
+                <a href={href} target="_blank">
+                  <IconType className="h-5 w-5" />
+                  <span className="hidden">{title}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
         </div>
-      </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+      </header>
+      <Section id="interests" title="Interests">
+        <ol className="flex flex-row flex-wrap gap-3 rounded-sm bg-white px-3 py-4 shadow-sm">
+          {myself.interests.map((interest, key) => (
+            <li
+              className="rounded-md bg-blue-50 px-2 py-0.5 text-sm sm:text-base"
+              key={key}
+            >
+              {interest}
+            </li>
+          ))}
+        </ol>
+      </Section>
+      <Section id="current-positions" title="Current positions">
+        <ol className="flex flex-col gap-3">
+          {myself.positions.current.map(({ key, ...position }) => (
+            <ListItem key={key} {...position} />
+          ))}
+        </ol>
+      </Section>
+      <Section id="past-positions" title="Past positions">
+        <ol className="flex flex-col gap-3">
+          {myself.positions.past.map(({ key, ...position }) => (
+            <ListItem key={key} {...position} />
+          ))}
+        </ol>
+      </Section>
+      <Section id="research" title="Research">
+        <ol className="flex flex-col gap-3">
+          {myself.research.map(({ key, ...position }) => (
+            <ListItem key={key} {...position} />
+          ))}
+        </ol>
+      </Section>
+      <Section id="education" title="Education">
+        <ol className="flex flex-col gap-3">
+          {myself.education.map(({ key, ...position }) => (
+            <ListItem key={key} {...position} />
+          ))}
+        </ol>
+      </Section>
+      <Section id="random-quotes" title="Random Quotes">
+        <ol className="flex flex-col gap-3">
+          {myself.randomQuotes.map(({ footnote, key, text }) => (
+            <div
+              key={key}
+              className="flex flex-col gap-4 rounded-sm bg-white px-3 py-4 shadow-sm"
+            >
+              <blockquote className="text-base italic">{text}</blockquote>
+              <div className="self-end">{footnote}</div>
+            </div>
+          ))}
+        </ol>
+      </Section>
     </main>
-  )
+  );
 }

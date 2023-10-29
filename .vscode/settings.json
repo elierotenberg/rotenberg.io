@@ -1,0 +1,65 @@
+{
+  "[javascript]": {
+    "editor.formatOnSave": false
+  },
+  "[javascriptreact]": {
+    "editor.formatOnSave": false
+  },
+  "[typescript]": {
+    "editor.formatOnSave": false
+  },
+  "[typescriptreact]": {
+    "editor.formatOnSave": false
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "editor.fontLigatures": true,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.gotoLocation.multipleTypeDefinitions": "goto",
+  "editor.guides.bracketPairs": true,
+  "editor.quickSuggestions": {
+    "comments": "on",
+    "other": "on",
+    "strings": "on"
+  },
+  "files.associations": {
+    ".css": "tailwindcss"
+  },
+  "editor.quickSuggestionsDelay": 0,
+  "editor.snippetSuggestions": "none",
+  "editor.suggest.localityBonus": true,
+  "editor.suggest.showSnippets": false,
+  "editor.suggest.snippetsPreventQuickSuggestions": false,
+  "editor.suggestOnTriggerCharacters": true,
+  "editor.suggestSelection": "recentlyUsed",
+  "editor.tabCompletion": "on",
+  "editor.tabSize": 2,
+  "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?_",
+  "eslint.lintTask.enable": true,
+  "files.autoSave": "off",
+  "javascript.referencesCodeLens.enabled": true,
+  "javascript.referencesCodeLens.showOnAllFunctions": true,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "references.preferredLocation": "view",
+  "terminal.integrated.enablePersistentSessions": false,
+  "json.format.enable": true,
+  "typescript.implementationsCodeLens.enabled": true,
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.referencesCodeLens.enabled": true,
+  "typescript.referencesCodeLens.showOnAllFunctions": true,
+  "typescript.suggest.paths": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "yaml.format.enable": true,
+  "yaml.maxItemsComputed": 50000,
+  "yaml.validate": false,
+  "emmet.excludeLanguages": [
+    "markdown",
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "html"
+  ]
+}
