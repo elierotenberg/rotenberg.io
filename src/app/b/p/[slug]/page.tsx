@@ -85,7 +85,6 @@ export default async function Page({ params: { slug } }: Props) {
 export async function generateMetadata({
   params: { slug },
 }: Props): Promise<Metadata> {
-  console.log("metadata", { slug });
   const blogPost = await getBlogPost(slug);
   return {
     description: blogPost.data.abstract,
@@ -93,12 +92,10 @@ export async function generateMetadata({
   };
 }
 
-export async function generateStaticParams(): Promise<Props[]> {
+export async function generateStaticParams(): Promise<Props["params"][]> {
   const blogPosts = await getBlogPosts();
 
   return blogPosts.map(({ data: { slug } }) => ({
-    params: {
-      slug,
-    },
+    slug,
   }));
 }

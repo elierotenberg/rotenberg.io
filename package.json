@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "build": "NEXT_TELEMETRY_DISABLED=1 next build",
+    "dev": "NEXT_TELEMETRY_DISABLED=1 next dev",
+    "firebase:deploy": "npx firebase deploy",
+    "firebase:serve": "npx firebase serve --only hosting",
+    "lint": "NEXT_TELEMETRY_DISABLED=1 next lint",
+    "start": "NEXT_TELEMETRY_DISABLED=1 next start"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
@@ -20,6 +22,7 @@
     "rehype-slug": "^6.0.0",
     "remark-gfm": "^4.0.0",
     "remark-toc": "^9.0.0",
+    "sharp": "^0.32.6",
     "slugify": "^1.6.6",
     "zod": "^3.22.4"
   },
@@ -38,6 +41,7 @@
     "eslint-plugin-prettier": "^5.0.1",
     "eslint-plugin-sort-destructure-keys": "^1.5.0",
     "eslint-plugin-sort-keys-fix": "^1.1.2",
+    "firebase-tools": "^12.7.0",
     "postcss": "^8",
     "prettier": "^3.0.3",
     "prettier-plugin-tailwindcss": "^0.5.6",

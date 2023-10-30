@@ -8,7 +8,9 @@ const nextConfig = {
         protocol: "https",
       },
     ],
+    unoptimized: true,
   },
+  output: "export",
 };
 
 export default nextConfig;
