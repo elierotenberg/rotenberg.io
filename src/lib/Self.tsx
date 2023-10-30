@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { FunctionComponent, ReactNode } from "react";
 import React from "react";
 
 import charlemagneSrc from "../../public/media/home/charlemagne.jpg";
@@ -23,6 +23,10 @@ import { VscGithub, VscHome, VscMail, VscTwitter } from "react-icons/vsc";
 import { SiLinkedin } from "react-icons/si";
 import type { IconType } from "react-icons";
 
+type PictureComponent = FunctionComponent<{
+  readonly className?: string;
+}>;
+
 type ContentItem = {
   readonly key: string;
   readonly title: ReactNode;
@@ -45,7 +49,7 @@ type Quote = {
 };
 
 export type Self = {
-  readonly picture: ReactNode;
+  readonly Picture: PictureComponent;
   readonly name: string;
   readonly description: string;
   readonly links: SelfLink[];
@@ -60,6 +64,14 @@ export type Self = {
 };
 
 export const myself: Self = {
+  Picture: ({ className }) => (
+    <Image
+      src={elieRotenbergSrc}
+      placeholder="blur"
+      alt="Elie Rotenberg"
+      className={className}
+    />
+  ),
   description: "Broad-spectrum hobbyist",
   education: [
     {
@@ -252,16 +264,6 @@ export const myself: Self = {
     },
   ],
   name: "Elie Rotenberg, PhD",
-  picture: (
-    <Image
-      src={elieRotenbergSrc}
-      placeholder="blur"
-      alt="Elie Rotenberg"
-      style={{
-        borderRadius: 999999,
-      }}
-    />
-  ),
   positions: {
     current: [
       {

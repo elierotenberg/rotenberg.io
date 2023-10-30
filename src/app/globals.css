@@ -4,22 +4,22 @@
 
 :root {
   --text-color: #000;
-  --text-color-light: #4a5568;
-  --link-color-active: #3182ce;
+  --text-color-light: #404040; /* neutral-700 */
+  --link-color-active: #0ea5e9; /* sky-500 */
 }
 
 body {
   color: var(--text-color);
 }
 
-a[href] {
+a {
   color: var(--text-color-light);
   font-weight: 700;
 }
 
-a[href]:hover,
-a[href]:active,
-a[href]:focus {
+a:hover,
+a:active,
+a:focus {
   color: var(--link-color-active);
 }
 

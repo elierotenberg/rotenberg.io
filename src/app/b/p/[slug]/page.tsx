@@ -9,6 +9,8 @@ import Image from "next/image";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import remarkToc from "remark-toc";
+import { MainContainer } from "../../../../components/MainContainer";
+import { BackToTopButton } from "../../../../components/BackToTopButton";
 
 type Props = {
   readonly params: {
@@ -41,7 +43,7 @@ export default async function Page({ params: { slug } }: Props) {
     data: { date, tags, title },
   } = await getBlogPost(slug);
   return (
-    <main className="container mx-auto flex max-w-6xl flex-col px-4 py-5">
+    <MainContainer>
       <Link href={`/b/p/${slug}`}>
         <h1 className="mb-2 text-2xl font-semibold">{title}</h1>
       </Link>
@@ -75,7 +77,8 @@ export default async function Page({ params: { slug } }: Props) {
           {content}
         </ReactMarkdown>
       </article>
-    </main>
+      <BackToTopButton />
+    </MainContainer>
   );
 }
 

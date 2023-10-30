@@ -3,6 +3,8 @@ import { getBlogPosts } from "../../lib/Blog.server";
 import { DateFormat } from "../../components/DateFormat";
 import Image from "next/image";
 import Link from "next/link";
+import { MainContainer } from "../../components/MainContainer";
+import { BackToTopButton } from "../../components/BackToTopButton";
 
 export const metadata: Metadata = {
   title: "Blog posts",
@@ -12,13 +14,13 @@ export default async function Page() {
   const blogPosts = await getBlogPosts();
 
   return (
-    <main className="container mx-auto max-w-6xl px-4 py-5">
-      <ol className="flex flex-col gap-4">
+    <MainContainer>
+      <ol className="flex flex-col gap-6" role="list">
         {blogPosts.map(
           ({ data: { abstract, cover, date, slug, tags, title } }) => (
             <article
               key={slug}
-              className="flex flex-row items-stretch gap-4 rounded-sm bg-white px-4 py-4 shadow-sm"
+              className="flex flex-row items-stretch gap-4  rounded-md border-1 border-slate-300 px-5 py-6 shadow-sm"
             >
               <div className="flex flex-1 flex-col">
                 <Link href={`/b/p/${slug}`}>
@@ -61,6 +63,7 @@ export default async function Page() {
           ),
         )}
       </ol>
-    </main>
+      <BackToTopButton />
+    </MainContainer>
   );
 }

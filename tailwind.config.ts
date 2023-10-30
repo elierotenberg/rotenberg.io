@@ -11,10 +11,8 @@ const config: Config = {
   plugins: [typography],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+      borderWidth: {
+        "1": "1px",
       },
     },
   },

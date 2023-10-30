@@ -1,0 +1,53 @@
+.toggle-details {
+  display: none;
+}
+
+.details {
+  display: none;
+}
+
+.toggle-details:checked ~ * .details {
+  display: block;
+}
+
+.output table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  display: block;
+  margin-top: 16px;
+  margin-bottom: 24px;
+  width: max-content;
+  max-width: 100%;
+  overflow: auto;
+  font-size: 14px;
+}
+
+.output tr {
+  background-color: #fff;
+  border-top: 1px solid hsla(210, 18%, 87%, 1);
+}
+
+.output tr:nth-child(2n) {
+  background-color: #f6f8fa;
+}
+
+.output td,
+.output th {
+  padding: 6px 13px;
+  border: 1px solid #d0d7de;
+}
+
+.output th {
+  font-weight: 600;
+}
+
+.output ol,
+.output ul {
+  margin-bottom: 14px;
+  list-style-type: disc;
+  list-style-position: inside;
+}
+
+.output li {
+  margin-bottom: 10px;
+}

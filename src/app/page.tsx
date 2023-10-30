@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 
 import { myself } from "../lib/Self";
 import type { FunctionComponent, ReactNode } from "react";
+import { MainContainer } from "../components/MainContainer";
+import { BackToTopButton } from "../components/BackToTopButton";
 
 export const metadata: Metadata = {
   description: "Broad-spectrum hobbyist",
@@ -14,25 +16,34 @@ const Section: FunctionComponent<{
   readonly children: ReactNode;
 }> = ({ children, id, title }) => {
   return (
-    <section className="flex flex-col gap-3">
-      <a href={`#${id}`}>
+    <section className="flex flex-col gap-6">
+      <a href={`#${id}`} className="self-start">
         <h2 id={id} className="text-lg font-medium sm:text-2xl">
           {title}
         </h2>
       </a>
       {children}
+      <BackToTopButton />
     </section>
   );
 };
 
-const ListItem: FunctionComponent<{
+const SectionList: FunctionComponent<{
+  readonly children: ReactNode;
+}> = ({ children }) => (
+  <ol className="flex flex-col gap-6" role="list">
+    {children}
+  </ol>
+);
+
+const SectionListItem: FunctionComponent<{
   readonly title: ReactNode;
   readonly date?: undefined | ReactNode;
   readonly description?: undefined | ReactNode;
   readonly picture?: undefined | ReactNode;
 }> = ({ date, description, picture, title }) => {
   return (
-    <div className="flex flex-row items-center gap-4 rounded-sm bg-white px-3 py-4 shadow-sm">
+    <div className="flex flex-row items-center gap-4 rounded-md border-1 border-slate-300 px-5 py-6">
       <div className="flex flex-1 flex-col">
         <h3 className="text-base">{title}</h3>
         {date && <span className="text-sm">{date}</span>}
@@ -49,15 +60,22 @@ const ListItem: FunctionComponent<{
 
 export default function Home() {
   return (
-    <main className="container mx-auto flex max-w-6xl flex-col gap-8 px-4 py-5">
-      <header className="flex flex-row items-center gap-4 rounded-sm bg-white px-3 py-4 shadow-sm">
-        <div className="w-16 sm:w-24">{myself.picture}</div>
+    <MainContainer>
+      <header className="flex flex-row items-center gap-5 rounded-md border-1 border-slate-300 px-5 py-6">
+        <div className="w-16 sm:w-24">
+          {
+            <myself.Picture className="rounded-full border-1 border-slate-300" />
+          }
+        </div>
         <div className="flex flex-1 flex-col">
           <h1 className="mb-0 text-xl font-semibold sm:text-3xl">
             {myself.name}
           </h1>
           <p className="text-sm sm:text-lg">{myself.description}</p>
-          <ol className="mt-1 flex flex-row items-center gap-1.5 sm:mt-3">
+          <ol
+            className="mt-1 flex flex-row items-center gap-1.5 sm:mt-3"
+            role="list"
+          >
             {myself.links.map(({ IconType, href, key, title }) => (
               <li key={key}>
                 <a href={href} target="_blank">
@@ -70,7 +88,10 @@ export default function Home() {
         </div>
       </header>
       <Section id="interests" title="Interests">
-        <ol className="flex flex-row flex-wrap gap-3 rounded-sm bg-white px-3 py-4 shadow-sm">
+        <ol
+          className="flex flex-row flex-wrap gap-3 rounded-md border-1 border-slate-300 px-5 py-6"
+          role="list"
+        >
           {myself.interests.map((interest, key) => (
             <li
               className="rounded-md bg-blue-50 px-2 py-0.5 text-sm sm:text-base"
@@ -82,46 +103,46 @@ export default function Home() {
         </ol>
       </Section>
       <Section id="current-positions" title="Current positions">
-        <ol className="flex flex-col gap-3">
+        <SectionList>
           {myself.positions.current.map(({ key, ...position }) => (
-            <ListItem key={key} {...position} />
+            <SectionListItem key={key} {...position} />
           ))}
-        </ol>
+        </SectionList>
       </Section>
       <Section id="past-positions" title="Past positions">
-        <ol className="flex flex-col gap-3">
+        <SectionList>
           {myself.positions.past.map(({ key, ...position }) => (
-            <ListItem key={key} {...position} />
+            <SectionListItem key={key} {...position} />
           ))}
-        </ol>
+        </SectionList>
       </Section>
       <Section id="research" title="Research">
-        <ol className="flex flex-col gap-3">
+        <SectionList>
           {myself.research.map(({ key, ...position }) => (
-            <ListItem key={key} {...position} />
+            <SectionListItem key={key} {...position} />
           ))}
-        </ol>
+        </SectionList>
       </Section>
       <Section id="education" title="Education">
-        <ol className="flex flex-col gap-3">
+        <SectionList>
           {myself.education.map(({ key, ...position }) => (
-            <ListItem key={key} {...position} />
+            <SectionListItem key={key} {...position} />
           ))}
-        </ol>
+        </SectionList>
       </Section>
       <Section id="random-quotes" title="Random Quotes">
-        <ol className="flex flex-col gap-3">
+        <SectionList>
           {myself.randomQuotes.map(({ footnote, key, text }) => (
             <div
               key={key}
-              className="flex flex-col gap-4 rounded-sm bg-white px-3 py-4 shadow-sm"
+              className="flex flex-col gap-4 rounded-md border-1 border-slate-300 px-5 py-6"
             >
               <blockquote className="text-base italic">{text}</blockquote>
               <div className="self-end">{footnote}</div>
             </div>
           ))}
-        </ol>
+        </SectionList>
       </Section>
-    </main>
+    </MainContainer>
   );
 }
