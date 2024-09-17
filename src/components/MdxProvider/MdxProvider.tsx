@@ -1,7 +1,6 @@
-import type { ComponentProps, FunctionComponent, ReactNode } from "react";
-import React, { Fragment } from "react";
-import type { Components } from "@mdx-js/react";
-import { MDXProvider as BaseMdxProvider } from "@mdx-js/react";
+"use client";
+
+import { Link } from "@chakra-ui/next-js";
 import {
   Code,
   Divider,
@@ -11,11 +10,14 @@ import {
   UnorderedList,
 } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
+import React, { Fragment } from "react";
 
 import { Figure } from "../Figure";
 
 import { Heading } from "./helpers/Heading";
-import { Link } from "./helpers/Link";
+
+import type { MDXComponents } from "mdx/types";
+import type { ComponentProps } from "react";
 
 const CodeBlock = dynamic(() => import(`../CodeBlock`));
 
@@ -32,9 +34,10 @@ const parseCodeClassNameAsLang = (className?: string): undefined | string => {
   return void 0;
 };
 
-const components: Components = {
+export const components = {
+  a: (props) => <Link {...(props as unknown as ComponentProps<typeof Link>)} />,
   code: ({ children = ``, className = `` }) => {
-    if (children.includes(`\n`)) {
+    if (typeof children === `string` && children.includes(`\n`)) {
       return (
         <CodeBlock lang={parseCodeClassNameAsLang(className)}>
           {children ?? ``}
@@ -43,40 +46,37 @@ const components: Components = {
     }
     return <Code display={`inline`}>{children}</Code>;
   },
-  inlineCode: (props) => <Code display={`inline`} {...props} />,
-  a: (props) => <Link {...(props as unknown as ComponentProps<typeof Link>)} />,
   h1: (props) => (
     <Fragment>
-      <Heading as="h2" mt={4} fontSize="1.5em" {...props} />
-      <Divider mt={2} mb={3} />
+      <Heading as={`h2`} fontSize={`1.5em`} mt={4} {...props} />
+      <Divider mb={3} mt={2} />
     </Fragment>
   ),
   h2: (props) => (
     <Fragment>
-      <Heading as="h2" mt={4} fontSize="1.35em" {...props} />
-      <Divider mt={2} mb={3} />
+      <Heading as={`h2`} fontSize={`1.35em`} mt={4} {...props} />
+      <Divider mb={3} mt={2} />
     </Fragment>
   ),
-  h3: (props) => <Heading as="h4" mt={4} mb={1} fontSize="1.2em" {...props} />,
-  h4: (props) => <Heading as="h5" mt={4} mb={1} fontSize="1.15em" {...props} />,
-  ul: (props) => <UnorderedList pl={2} {...props} />,
-  ol: OrderedList,
+  h3: (props) => (
+    <Heading as={`h4`} fontSize={`1.2em`} mb={1} mt={4} {...props} />
+  ),
+  h4: (props) => (
+    <Heading as={`h5`} fontSize={`1.15em`} mb={1} mt={4} {...props} />
+  ),
+  img: (props) => <Figure maxHeight={320} objectFit={`contain`} {...props} />,
+  inlineCode: (props) => <Code display={`inline`} {...props} />,
   li: (props) => <ListItem my={1} {...props} />,
-  img: (props) => <Figure maxHeight={320} objectFit="contain" {...props} />,
+  ol: OrderedList,
   p: (props) => (
     <Text
-      as="div"
-      textAlign="justify"
-      sx={{ hyphens: `auto` }}
-      my={4}
+      as={`div`}
       lineHeight={1.5}
+      my={4}
+      sx={{ hyphens: `auto` }}
+      textAlign={`justify`}
       {...props}
     />
   ),
-};
-
-export const MdxProvider: FunctionComponent<{
-  readonly children?: ReactNode;
-}> = ({ children }) => (
-  <BaseMdxProvider components={components}>{children}</BaseMdxProvider>
-);
+  ul: (props) => <UnorderedList pl={2} {...props} />,
+} satisfies Partial<MDXComponents>;

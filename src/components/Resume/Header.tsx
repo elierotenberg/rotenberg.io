@@ -1,37 +1,41 @@
+"use client";
+
+import { Link } from "@chakra-ui/next-js";
 import {
   Avatar,
+  Flex,
   Heading,
+  Icon,
   Text,
   VisuallyHidden,
-  Icon,
-  Flex,
 } from "@chakra-ui/react";
-import type { FunctionComponent } from "react";
 import React from "react";
-import type { IconType } from "react-icons";
 import {
-  FaRegEnvelope,
   FaGithub,
-  FaTwitter,
-  FaLinkedin,
   FaLink,
+  FaLinkedin,
+  FaRegEnvelope,
+  FaTwitter,
 } from "react-icons/fa";
 
-import { Link } from "../Link";
+import portrait from "./elie-rotenberg.png";
+
+import type { FunctionComponent } from "react";
+import type { IconType } from "react-icons";
 
 const HeaderLink: FunctionComponent<{
-  href: string;
-  children: string;
-  icon: IconType;
-}> = ({ href, children, icon }) => {
+  readonly href: string;
+  readonly children: string;
+  readonly icon: IconType;
+}> = ({ children, href, icon }) => {
   const url = new URL(href);
   return (
     <Link
+      alignItems={`center`}
+      display={`inline-flex`}
+      gap={2}
       href={href}
       isExternal
-      display={`inline-flex`}
-      alignItems="center"
-      gap={2}
     >
       <VisuallyHidden>{children}</VisuallyHidden>
       <Icon as={icon} />
@@ -56,16 +60,16 @@ const HeaderLink: FunctionComponent<{
 export const Header: FunctionComponent = () => {
   return (
     <Flex flexDirection={`column`} gap={4}>
-      <Flex flexDirection={`row`} gap={6} w="100%">
-        <Avatar src="/elie-rotenberg.png" title="Elie Rotenberg" size="xl" />
+      <Flex flexDirection={`row`} gap={6} w={`100%`}>
+        <Avatar size={`xl`} src={portrait.src} title={`Elie Rotenberg`} />
         <Flex flexDirection={`column`}>
-          <Heading as="h1">Elie Rotenberg</Heading>
-          <Text>Entrepreneur, computer scientist, lifelong learner</Text>
+          <Heading as={`h1`}>{`Elie Rotenberg`}</Heading>
+          <Text>{`Entrepreneur, computer scientist, lifelong learner`}</Text>
         </Flex>
       </Flex>
       <Flex
+        alignItems={`center`}
         flexDirection={`row`}
-        alignItems="center"
         gap={1}
         pl={4}
         sx={{
@@ -75,23 +79,23 @@ export const Header: FunctionComponent = () => {
           },
         }}
       >
-        <HeaderLink href="mailto:elie@rotenberg.io" icon={FaRegEnvelope}>
-          Email
+        <HeaderLink href={`mailto:elie@rotenberg.io`} icon={FaRegEnvelope}>
+          {`Email`}
         </HeaderLink>
-        <HeaderLink href="https://github.com/elierotenberg" icon={FaGithub}>
-          Github
+        <HeaderLink href={`https://github.com/elierotenberg`} icon={FaGithub}>
+          {`Github`}
         </HeaderLink>
-        <HeaderLink href="https://twitter.com/elierotenberg" icon={FaTwitter}>
-          Twitter
+        <HeaderLink href={`https://twitter.com/elierotenberg`} icon={FaTwitter}>
+          {`Twitter`}
         </HeaderLink>
         <HeaderLink
-          href="https://linkedin.com/in/elierotenberg"
+          href={`https://linkedin.com/in/elierotenberg`}
           icon={FaLinkedin}
         >
-          LinkedIn
+          {`LinkedIn`}
         </HeaderLink>
-        <HeaderLink href="https://rotenberg.io" icon={FaLink}>
-          Homepage
+        <HeaderLink href={`https://rotenberg.io`} icon={FaLink}>
+          {`Homepage`}
         </HeaderLink>
       </Flex>
     </Flex>

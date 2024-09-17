@@ -1,49 +1,48 @@
-import type { FunctionComponent } from "react";
-import React from "react";
+"use client";
+
 import { List, ListItem } from "@chakra-ui/react";
+import React from "react";
 
-import { Page } from "../Page";
-
-import { Header } from "./Header";
 import { Current } from "./Current";
+import { Education } from "./Education";
+import { Header } from "./Header";
+import { Interests } from "./Interests";
 import { Past } from "./Past";
 import { Research } from "./Research";
-import { Education } from "./Education";
-import { Interests } from "./Interests";
+
+import type { FunctionComponent } from "react";
 
 export const Resume: FunctionComponent = () => {
   return (
-    <Page withFooter={true} withNavBar={true} title="Elie Rotenberg" lang="en">
-      <List
-        as="div"
-        alignItems="flex-start"
-        spacing={4}
-        mt={4}
-        sx={{
-          "& > *": {
-            breakInside: `avoid`,
-          },
-        }}
-      >
-        <ListItem as="header">
-          <Header />
-        </ListItem>
-        <ListItem as="section">
-          <Interests />
-        </ListItem>
-        <ListItem as="section">
-          <Current />
-        </ListItem>
-        <ListItem as="section">
-          <Past />
-        </ListItem>
-        <ListItem as="section">
-          <Research />
-        </ListItem>
-        <ListItem as="section">
-          <Education />
-        </ListItem>
-      </List>
-    </Page>
+    <List
+      alignItems={`flex-start`}
+      as={`div`}
+      mt={4}
+      spacing={4}
+      sx={{
+        "& > *": {
+          breakInside: `avoid`,
+        },
+      }}
+    >
+      <ListItem as={`header`}>
+        <Header />
+      </ListItem>
+      <ListItem as={`section`}>
+        <Interests />
+      </ListItem>
+      <ListItem as={`section`}>
+        <Current />
+      </ListItem>
+      <ListItem as={`section`}>
+        <Past />
+      </ListItem>
+      <ListItem as={`section`}>
+        <Research />
+      </ListItem>
+      <ListItem as={`section`}>
+        <Education />
+      </ListItem>
+    </List>
   );
 };

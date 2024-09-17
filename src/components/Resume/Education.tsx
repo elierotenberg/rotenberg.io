@@ -1,24 +1,27 @@
-import type { FunctionComponent } from "react";
-import React from "react";
+"use client";
 
-import { Link } from "../Link";
+import { Link } from "@chakra-ui/next-js";
+import React from "react";
 
 import { PositionItem } from "./PositionItem";
 import { PositionList } from "./PositionList";
 
+import type { FunctionComponent } from "react";
+
 export const Education: FunctionComponent = () => (
-  <PositionList title="Education">
+  <PositionList title={`Education`}>
     <PositionItem
-      date="2009"
+      date={`2009`}
       description={
         <>
-          <Link href="https://master.cri-paris.org/" isExternal>
-            Interdisciplinary Approaches to Life and the Web
+          <Link href={`https://master.cri-paris.org/`} isExternal>
+            {`Interdisciplinary Approaches to Life and the Web`}
           </Link>
           {` `}
-          at{` `}
-          <Link href="https://cri-paris.org" isExternal>
-            Centre de Recherche Interdisciplinaire
+          {`at`}
+          {` `}
+          <Link href={`https://cri-paris.org`} isExternal>
+            {`Centre de Recherche Interdisciplinaire`}
           </Link>
         </>
       }
@@ -26,32 +29,33 @@ export const Education: FunctionComponent = () => (
       {`Master's Degree in Interdisciplinary Science`}
     </PositionItem>
     <PositionItem
-      date="2008"
+      date={`2008`}
       description={
         <>
           <Link
-            href="https://wikimpri.dptinfo.ens-cachan.fr/doku.php"
+            href={`https://wikimpri.dptinfo.ens-cachan.fr/doku.php`}
             isExternal
           >
-            Master Program for Research in Computer Science of Paris (MPRI)
+            {`Master Program for Research in Computer Science of Paris (MPRI)`}
           </Link>
           {` `}
-          at{` `}
-          <Link href="https://ens-paris-saclay.fr/en" isExternal>
-            École normale supérieure (Cachan)
+          {`at`}
+          {` `}
+          <Link href={`https://ens-paris-saclay.fr/en`} isExternal>
+            {`École normale supérieure (Cachan)`}
           </Link>
-          , ranked with high honors
+          {`, ranked with high honors`}
         </>
       }
     >
       {`Master's Degree in Computer Science`}
     </PositionItem>
     <PositionItem
-      date="2007"
+      date={`2007`}
       description={
         <>
-          <Link href="http://www.ens-lyon.fr/" isExternal>
-            École normale supérieure (Lyon)
+          <Link href={`http://www.ens-lyon.fr/`} isExternal>
+            {`École normale supérieure (Lyon)`}
           </Link>
         </>
       }
@@ -59,48 +63,50 @@ export const Education: FunctionComponent = () => (
       {`Bachelor of Science in Computer Science`}
     </PositionItem>
     <PositionItem
-      date="2005 - 2007"
+      date={`2005 - 2007`}
       description={
         <>
-          Classe préparatoire aux grandes écoles at{` `}
+          {`Classe préparatoire aux grandes écoles at`}
+          {` `}
           <Link
-            href="http://www.lycee-charlemagne.fr/cpge/presentation.php"
+            href={`http://www.lycee-charlemagne.fr/cpge/presentation.php`}
             isExternal
           >
-            Lycée Charlemagne
+            {`Lycée Charlemagne`}
           </Link>
-          , specialization in Maths and Computer Science. Admitted at École
-          normale supérieure (Lyon)
+          {`, specialization in Maths and Computer Science. Admitted at École`}
+          {`normale supérieure (Lyon)`}
         </>
       }
     >
       {`CPGE MPSI/MP*`}
     </PositionItem>
     <PositionItem
-      date="2002 - 2005"
+      date={`2002 - 2005`}
       description={
         <>
-          <Link href="https://www.louislegrand.fr/en/home/" isExternal>
-            Lycée Louis-le-Grand
+          <Link href={`https://www.louislegrand.fr/en/home/`} isExternal>
+            {`Lycée Louis-le-Grand`}
           </Link>
-          . Creator of Computer Science Club
+          {`. Creator of Computer Science Club`}
         </>
       }
     >
-      Graduation in Science
+      {`Graduation in Science`}
     </PositionItem>
     <PositionItem
-      date="2002 - 2005"
+      date={`2002 - 2005`}
       description={
         <>
-          Intensive training program in Computer Science at{` `}
-          <Link href="http://www.france-ioi.org/" isExternal>
-            France IOI
+          {`Intensive training program in Computer Science at`}
+          {` `}
+          <Link href={`http://www.france-ioi.org/`} isExternal>
+            {`France IOI`}
           </Link>
         </>
       }
     >
-      International Olympiads of Informatics Trainee
+      {`International Olympiads of Informatics Trainee`}
     </PositionItem>
   </PositionList>
 );

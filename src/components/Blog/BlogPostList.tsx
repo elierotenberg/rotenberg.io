@@ -1,30 +1,27 @@
 import { List } from "@chakra-ui/react";
-import type { FunctionComponent } from "react";
 import React, { useMemo } from "react";
-
-import type { BlogPostData } from "../../lib/Blog";
-import { Page } from "../Page";
 
 import { BlogPostListItem } from "./BlogPostListItem";
 
-interface IBlogPostListProps {
-  readonly children: BlogPostData[];
-}
+import type { BlogPostMetadata } from "../../lib/Blog";
+import type { FunctionComponent } from "react";
+
+type IBlogPostListProps = {
+  readonly children: BlogPostMetadata[];
+};
 
 export const BlogPostList: FunctionComponent<IBlogPostListProps> = ({
   children,
 }) => {
   const sortedBlogPosts = useMemo(
-    () => children.sort((a, b) => b.date - a.date),
+    () => children.sort((a, b) => b.date.getTime() - a.date.getTime()),
     [children],
   );
   return (
-    <Page withNavBar={true} withFooter={true} title="Blog" lang="en">
-      <List spacing={2}>
-        {sortedBlogPosts.map((blogPost) => (
-          <BlogPostListItem key={blogPost.slug} blogPost={blogPost} />
-        ))}
-      </List>
-    </Page>
+    <List spacing={2}>
+      {sortedBlogPosts.map((blogPost) => (
+        <BlogPostListItem blogPost={blogPost} key={blogPost.slug} />
+      ))}
+    </List>
   );
 };

@@ -1,38 +1,41 @@
-import type { FunctionComponent } from "react";
+"use client";
+
 import React from "react";
 
 import { PositionItem } from "./PositionItem";
 import { PositionList } from "./PositionList";
 
+import type { FunctionComponent } from "react";
+
 export const Past: FunctionComponent = () => (
-  <PositionList title="Past positions">
+  <PositionList title={`Past positions`}>
     <PositionItem
-      date="2018 - 2019"
+      date={`2018 - 2019`}
       description={
         <>
-          Tech lead on internal cross-branch projects (Infra, Machine
-          Learning...)
+          {`Tech lead on internal cross-branch projects (Infra, Machine`}
+          {`Learning...)`}
         </>
       }
     >
-      Head of R&D Team at Webedia
+      {`Head of R&D Team at Webedia`}
     </PositionItem>
     <PositionItem
-      date="2014 - 2017"
+      date={`2014 - 2017`}
       description={
         <>
-          CTO, strategy & editorial advisor at Jeuxvideo.com, Millenium,
-          IGN.fr...
+          {`CTO, strategy & editorial advisor at Jeuxvideo.com, Millenium,`}
+          {`IGN.fr...`}
         </>
       }
     >
-      CTO of Webedia Gaming
+      {`CTO of Webedia Gaming`}
     </PositionItem>
     <PositionItem
-      date="2008 - 2013"
-      description={<>CTO, strategy & editorial advisor</>}
+      date={`2008 - 2013`}
+      description={<>{`CTO, strategy & editorial advisor`}</>}
     >
-      Founder at Millenium
+      {`Founder at Millenium`}
     </PositionItem>
   </PositionList>
 );

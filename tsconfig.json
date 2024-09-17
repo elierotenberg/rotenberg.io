@@ -1,56 +1,38 @@
 {
   "compilerOptions": {
-    "target": "es2019",
-    "module": "esnext",
-    "lib": [
-      "es5",
-      "esnext",
-      "dom"
-    ],
-    "jsx": "preserve",
-    "declaration": true,
-    "sourceMap": true,
-    "outDir": "build",
-    "rootDirs": [
-      "src"
-    ],
-    "importHelpers": true,
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
-    "baseUrl": ".",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "baseUrl": "./src",
     "allowJs": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
+    "strict": true,
     "noEmit": true,
+    "incremental": true,
+    "module": "esnext",
+    "esModuleInterop": true,
+    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "typeRoots": [
-      "./node_modules/@types",
-      "./types"
-    ],
-    "incremental": true
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      },
+      {
+        "name": "typescript-css-modules"
+      }
+    ]
   },
-  "exclude": [
-    "node_modules",
-    "out",
-    ".firebase",
-    ".next",
-    "public"
-  ],
   "include": [
     "next-env.d.ts",
+    ".next/types/**/*.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "*.js",
+    ".eslintrc.cjs",
+    "graphql.config.ts",
+    "next.config.mjs",
+    "postcss.config.cjs"
   ],
-  "ts-node": {
-    "esm": true
-  }
+  "exclude": ["node_modules"]
 }

@@ -9,11 +9,11 @@ export const theme = extendTheme({
   components: {
     Link: {
       baseStyle: {
-        color: colors.link,
         _hover: {
-          textDecoration: `underline`,
           color: colors.linkHover,
+          textDecoration: `underline`,
         },
+        color: colors.link,
       },
     },
   },

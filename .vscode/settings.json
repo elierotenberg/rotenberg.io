@@ -1,56 +1,86 @@
 {
-  "editor.fontLigatures": true,
-  "editor.suggestSelection": "recentlyUsed",
+  "[javascript][javascriptreact][typescript][typescriptreact][vue]": {
+    "editor.formatOnSave": false
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.gotoLocation.multipleTypeDefinitions": "goto",
+  "editor.guides.bracketPairs": true,
+  "editor.quickSuggestions": {
+    "comments": "on",
+    "other": "on",
+    "strings": "on"
+  },
+  "editor.quickSuggestionsDelay": 0,
+  "editor.snippetSuggestions": "none",
+  "editor.suggest.localityBonus": true,
+  "editor.suggest.showSnippets": false,
+  "editor.suggest.snippetsPreventQuickSuggestions": false,
+  "editor.suggestOnTriggerCharacters": true,
+  "editor.tabCompletion": "on",
   "editor.tabSize": 2,
-  "emmet.showAbbreviationSuggestions": false,
-  "emmet.showExpandedAbbreviation": "never",
   "emmet.excludeLanguages": [
-    "typescript",
-    "typescriptreact",
-    "javascript",
-    "javascriptreact"
-  ],
-  "eslint.packageManager": "npm",
-  "eslint.validate": [
+    // Exclude emmet snippets which are usually clutter in a Copilot-enabled environment
+    "html",
     "javascript",
     "javascriptreact",
+    "markdown",
     "typescript",
     "typescriptreact"
   ],
-  "eslint.workingDirectories": [
-    {
-      "directory": ".",
-      "changeProcessCWD": true
-    }
-  ],
+  "eslint.codeActionsOnSave.mode": "problems",
   "eslint.lintTask.enable": true,
   "files.associations": {
-    "*.md": "mdx",
-    "*.sql": "sql",
-    "*.d.ts": "typescript"
+    "*.css": "scss"
   },
   "files.autoSave": "off",
+  "files.exclude": {},
+  "javascript.preferences.importModuleSpecifier": "relative",
+  "javascript.referencesCodeLens.enabled": true,
+  "javascript.referencesCodeLens.showOnAllFunctions": true,
   "javascript.updateImportsOnFileMove.enabled": "always",
-  "[javascript]": {
-    "editor.formatOnSave": false
+  "json.format.enable": true,
+  "markdownlint.config": {
+    "MD024": {
+      "siblings_only": true
+    }
   },
-  "[javascriptreact]": {
-    "editor.formatOnSave": false
+  "references.preferredLocation": "view",
+  "task": {
+    "checkForUpdates": false,
+    "tree": {
+      "sort": "alphanumeric"
+    },
+    "updateOn": "manual"
   },
-  "[typescript]": {
-    "editor.formatOnSave": false
-  },
-  "[typescriptreact]": {
-    "editor.formatOnSave": false
-  },
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.implementationsCodeLens.enabled": true,
   "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.preferences.preferTypeOnlyAutoImports": true,
+  "typescript.referencesCodeLens.enabled": true,
+  "typescript.referencesCodeLens.showOnAllFunctions": true,
+  "typescript.suggest.autoImports": true,
   "typescript.suggest.paths": true,
-  "yaml.format.enable": true,
-  "yaml.validate": false,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.tsserver.watchOptions": {
+    "fallbackPolling": "dynamicPriorityPolling",
+    "watchDirectory": "useFsEvents",
+    "watchFile": "useFsEvents"
   },
-  "editor.suggest.showSnippets": false,
-  "editor.suggest.snippetsPreventQuickSuggestions": false,
-  "editor.snippetSuggestions": "none"
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "window.title": "${rootName}${separator}${activeEditorShort}",
+  "yaml.format.enable": true,
+  "yaml.maxItemsComputed": 5000000,
+  "yaml.schemas": {
+    "https://taskfile.dev/schema.json": [
+      "Taskfile.yml"
+    ]
+  }
 }

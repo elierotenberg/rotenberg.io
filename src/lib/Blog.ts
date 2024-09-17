@@ -1,32 +1,23 @@
-import * as t from "typed-assert";
+import { z } from "zod";
 
-export type BlogPostData = {
-  readonly slug: string;
-  readonly title: string;
-  readonly lang: string;
-  readonly tags: string[];
-  readonly date: number;
-  readonly status: `draft` | `published`;
-  readonly cover: string;
-  readonly abstract: string;
-};
+import type { MDXRemoteSerializeResult } from "next-mdx-remote/rsc";
 
-export const parseBlogPostData = (input: unknown): BlogPostData => {
-  t.isRecord(input);
-  const data = input as Omit<BlogPostData, `date`> & {
-    readonly date: string;
-  };
-  t.isString(data.slug);
-  t.isString(data.title);
-  t.isString(data.lang);
-  t.isArrayOfType(data.tags, t.isString);
-  t.isString(data.date);
-  const date = new Date(data.date).getTime();
-  t.isOneOf(data.status, [`draft`, `published`]);
-  t.isString(data.cover);
-  t.isString(data.abstract);
-  return {
-    ...data,
-    date,
-  };
+export const BlogPostMetadata = z.object({
+  abstract: z.string(),
+  cover: z.string(),
+  date: z
+    .string()
+    .datetime()
+    .transform((date) => new Date(date))
+    .pipe(z.date()),
+  lang: z.string(),
+  slug: z.string(),
+  status: z.enum([`draft`, `published`]),
+  tags: z.array(z.string()),
+  title: z.string(),
+});
+export type BlogPostMetadata = z.infer<typeof BlogPostMetadata>;
+
+export type BlogPost = MDXRemoteSerializeResult & {
+  readonly frontmatter: BlogPostMetadata;
 };

@@ -1,8 +1,11 @@
-import { Heading, HStack, VStack } from "@chakra-ui/react";
-import type { FunctionComponent } from "react";
+"use client";
+
+import { HStack, Heading, VStack } from "@chakra-ui/react";
 import React from "react";
 
 import { TagList } from "../TagList";
+
+import type { FunctionComponent } from "react";
 
 const interests = [
   `biology`,
@@ -25,11 +28,11 @@ const interests = [
 ];
 
 export const Interests: FunctionComponent = () => (
-  <VStack alignItems="flex-start" spacing={2}>
-    <Heading as="h2" size="md">
-      Interests
+  <VStack alignItems={`flex-start`} spacing={2}>
+    <Heading as={`h2`} size={`md`}>
+      {`Interests`}
     </Heading>
-    <TagList tags={interests} pl={4} />
+    <TagList pl={4} tags={interests} />
     <HStack style={{ maxWidth: `100%` }}></HStack>
   </VStack>
 );

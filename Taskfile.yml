@@ -1,0 +1,25 @@
+version: "3"
+
+run: when_changed
+
+tasks:
+  build:
+    desc: Build the website
+    cmds:
+      - rm -rf .next
+      - pnpm exec next build
+
+  dev:
+    desc: Start the development server
+    cmds:
+      - pnpm exec next dev --turbo
+
+  update:
+    desc: Interactively update all packages using smart defaults
+    interactive: true
+    aliases:
+      - update
+    cmds:
+      - pnpm dlx npm-check-updates -u -i -t minor -x '@next/env,next,react,react-dom' --install never
+      - pnpm dlx npm-check-updates -u -i -f 'next,@next/env,react,react-dom' -t @canary --pre 1 --install never
+      - pnpm install
