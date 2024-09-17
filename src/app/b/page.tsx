@@ -16,8 +16,12 @@ export default async function Page() {
   return (
     <MainContainer>
       <ol className="flex flex-col gap-6" role="list">
-        {blogPosts.map(
-          ({ data: { abstract, cover, date, slug, tags, title } }) => (
+        {blogPosts
+          .sort(
+            (a, b) =>
+              new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
+          )
+          .map(({ data: { abstract, cover, date, slug, tags, title } }) => (
             <article
               key={slug}
               className="flex flex-row items-stretch gap-4  rounded-md border-1 border-slate-300 px-5 py-6 shadow-sm"
@@ -60,8 +64,7 @@ export default async function Page() {
                 />
               </div>
             </article>
-          ),
-        )}
+          ))}
       </ol>
       <BackToTopButton />
     </MainContainer>

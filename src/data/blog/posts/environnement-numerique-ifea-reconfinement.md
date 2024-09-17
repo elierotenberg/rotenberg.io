@@ -93,7 +93,7 @@ Sur un temps plus long, cette structure permet d'**organiser la progression dans
 
 L'intégration très profonde du numérique dans le quotidien facilite considérablement la **continuité pédagogique à distance**.
 
-## L'élève à distance...
+## L'élève à distance
 
 Lorsqu'un enfant ne peut être présent dans la salle de classe, il dispose toujours de son ordinateur. Il a accès aux mêmes documents et activités que les autres. Il peut même participer aux séances à distance puisque les enseignants peuvent transmettre la vidéo et le son en direct.
 

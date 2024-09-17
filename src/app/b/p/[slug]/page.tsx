@@ -9,8 +9,10 @@ import Image from "next/image";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import remarkToc from "remark-toc";
+import rehypeHighlight from "rehype-highlight";
 import { MainContainer } from "../../../../components/MainContainer";
 import { BackToTopButton } from "../../../../components/BackToTopButton";
+import { RegisterHightlightJs } from "./page.client";
 
 type Props = {
   readonly params: {
@@ -43,42 +45,46 @@ export default async function Page({ params: { slug } }: Props) {
     data: { date, tags, title },
   } = await getBlogPost(slug);
   return (
-    <MainContainer>
-      <Link href={`/b/p/${slug}`}>
-        <h1 className="mb-2 text-2xl font-semibold">{title}</h1>
-      </Link>
-      <span className="mb-2 text-base">
-        <span className="hidden">{date}</span>
-        <DateFormat
-          date={date}
-          options={{
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-          }}
-        />
-      </span>
-      <ul className="flex flex-row flex-wrap gap-1">
-        {tags.map((tag) => (
-          <li key={tag} className="rounded-md bg-slate-100 px-2 py-1 text-sm">
-            {tag}
-          </li>
-        ))}
-      </ul>
-      <article className="prose-sm prose-ul:list-disc">
-        <ReactMarkdown
-          components={markdownComponents}
-          rehypePlugins={[
-            rehypeSlug,
-            [rehypeAutolinkHeadings, { behavior: "wrap" }],
-          ]}
-          remarkPlugins={[remarkToc]}
-        >
-          {content}
-        </ReactMarkdown>
-      </article>
-      <BackToTopButton />
-    </MainContainer>
+    <>
+      <RegisterHightlightJs />
+      <MainContainer>
+        <Link href={`/b/p/${slug}`}>
+          <h1 className="mb-2 text-3xl font-semibold">{title}</h1>
+        </Link>
+        <span className="mb-2 text-base">
+          <span className="hidden">{date}</span>
+          <DateFormat
+            date={date}
+            options={{
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+            }}
+          />
+        </span>
+        <ul className="flex flex-row flex-wrap gap-1">
+          {tags.map((tag) => (
+            <li key={tag} className="rounded-md bg-slate-100 px-2 py-1 text-sm">
+              {tag}
+            </li>
+          ))}
+        </ul>
+        <article className="prose prose-base max-w-full prose-a:no-underline  prose-pre:p-0 prose-pre:text-base prose-ul:list-disc prose-hr:my-5">
+          <ReactMarkdown
+            components={markdownComponents}
+            rehypePlugins={[
+              rehypeSlug,
+              [rehypeAutolinkHeadings, { behavior: "wrap" }],
+              rehypeHighlight,
+            ]}
+            remarkPlugins={[remarkToc]}
+          >
+            {content}
+          </ReactMarkdown>
+        </article>
+        <BackToTopButton />
+      </MainContainer>
+    </>
   );
 }
 
