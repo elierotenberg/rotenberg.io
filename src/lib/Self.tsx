@@ -9,9 +9,11 @@ import franceIoiSrc from "../../public/media/home/france-ioi.png";
 import ifeaSrc from "../../public/media/home/ifea.png";
 import iscpifSrc from "../../public/media/home/iscpif.jpg";
 import jmSrc from "../../public/media/home/jm.png";
+import lisaSrc from "../../public/media/home/lisa.png";
 import llgSrc from "../../public/media/home/llg.jpg";
 import lpiSrc from "../../public/media/home/lpi.png";
 import medialabSrc from "../../public/media/home/medialab.png";
+import mdtSrc from "../../public/media/home/mdt.png";
 import milleniumSrc from "../../public/media/home/millenium.png";
 import upmcSrc from "../../public/media/home/upmc.png";
 import webediaGamingSrc from "../../public/media/home/webedia-gaming.jpg";
@@ -267,8 +269,15 @@ export const myself: Self = {
   positions: {
     current: [
       {
-        date: "2020 - Present",
+        date: "2023 - Present",
+        key: "mdt",
+        picture: <Image src={mdtSrc} alt="MindEdTech" />,
+        title: <>Founder of MindEdTech</>,
+      },
+      {
+        date: "2022 - Present",
         key: "lisa",
+        picture: <Image src={lisaSrc} alt="LISA" />,
         title: <>Founder of LISA</>,
       },
       {
